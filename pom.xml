@@ -76,5 +76,8 @@
             </plugin>
         </plugins>
     </build>
-
+    <modules>
+        <module>springboot-demo</module>
+        <module>springboot-mybatisplus</module>
+    </modules>
 </project>
