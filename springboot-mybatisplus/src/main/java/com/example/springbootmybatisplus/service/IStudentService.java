@@ -1,11 +1,11 @@
 package com.example.springbootmybatisplus.service;
 
-import com.example.springbootmybatisplus.entity.MagicApiFile;
+import com.example.springbootmybatisplus.entity.Student;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.springbootmybatisplus.utils.ApiError;
 import com.example.springbootmybatisplus.utils.Either;
-import com.sun.xml.internal.ws.util.CompletedFuture;
 
-import java.util.Optional;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -16,7 +16,7 @@ import java.util.concurrent.CompletableFuture;
  * @author yzg
  * @since 2022-07-02
  */
-public interface IMagicApiFileService extends IService<MagicApiFile> {
+public interface IStudentService extends IService<Student> {
+    CompletableFuture<Either<ApiError,List<Student>>> getAll();
 
-    CompletableFuture<Either> getAll();
 }

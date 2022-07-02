@@ -144,7 +144,7 @@ public class CodeGenerator {
         strategy.setControllerMappingHyphenStyle(true);
         strategy.setTablePrefix(pc.getModuleName() + "_");
         strategy.setInclude("MAGIC_API_FILE");
-        strategy.setEntityTableFieldAnnotationEnable(true);
+        strategy.setInclude("STUDENT");
         mpg.setStrategy(strategy);
         mpg.setTemplateEngine(new FreemarkerTemplateEngine());
         mpg.execute();
