@@ -35,8 +35,8 @@ public class Student implements Serializable {
     @TableField("GENDER")
     private String gender;
 
-    @TableField("CLASS")
-    private String class;
+    @TableField("CLASSES")
+    private String classes;
 
     @TableField("NAME")
     private String name;

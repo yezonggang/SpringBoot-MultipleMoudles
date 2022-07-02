@@ -17,6 +17,6 @@ import java.util.concurrent.CompletableFuture;
  * @since 2022-07-02
  */
 public interface IStudentService extends IService<Student> {
-    CompletableFuture<Either<ApiError,List<Student>>> getAll();
+    CompletableFuture<Either<ApiError,List<Student>>> getAll() throws Throwable;
 
 }

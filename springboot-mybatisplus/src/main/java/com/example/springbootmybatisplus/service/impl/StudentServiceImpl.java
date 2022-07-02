@@ -13,7 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -26,13 +28,23 @@ import java.util.concurrent.CompletableFuture;
 @Service
 
 public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> implements IStudentService {
-    @Autowired
-    StudentMapper studentMapper;
-    @Override
-    public CompletableFuture<Either<ApiError, List<Student>>> getAll() {
-        LambdaQueryWrapper<Student> queryWrapper = new QueryWrapper<Student>().lambda().eq(Student::getName,"yzg");
-        List<Student> studentList = studentMapper.selectList(queryWrapper);
+    private StudentMapper studentMapper;
 
-        return CompletableFuture.completedFuture(Either.Left(ApiError.from(ApiErrorEnum.CHECK_DATABASE_WRONG)));
+    public StudentServiceImpl(StudentMapper studentMapper) {
+        this.studentMapper = studentMapper;
+    }
+
+    @Override
+    public CompletableFuture<Either<ApiError, List<Student>>> getAll() throws Throwable {
+        LambdaQueryWrapper<Student> queryWrapper = new QueryWrapper<Student>().lambda().eq(Student::getName,"yzg");
+        Optional<List<Student>> optionalStudents = Optional.ofNullable(studentMapper.selectList(queryWrapper));
+        List<Student> listStudents =  optionalStudents.orElseThrow(()->{
+            return new Throwable("xxx");
+        }).stream().filter(student -> {
+            return student.getGender().equalsIgnoreCase("boy");
+        }).collect(Collectors.toList());
+
+        return CompletableFuture.completedFuture(Either.Right(listStudents));
+
     }
 }
