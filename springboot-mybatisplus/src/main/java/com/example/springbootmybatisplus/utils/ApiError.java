@@ -10,8 +10,10 @@ public class ApiError {
     private  String errorCode;
 
     public ApiError(String errorName, String errorMsg, String errorCode) {
+        this.errorName = errorName;
+        this.errorMsg = errorMsg;
+        this.errorCode = errorCode;
     }
-
 
     public static ApiError from(String errorName, String errorMsg, String errorCode) {
         return new ApiError(errorName,errorMsg,errorCode);
