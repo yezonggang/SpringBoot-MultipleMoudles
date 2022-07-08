@@ -43,32 +43,32 @@ public class ThreadPool {
     }
 
     public static class TestCallable implements Callable<Integer> {
-        public static int appleNum = 5;
+        public static int thingNum = 5;
 
         @Override
         public synchronized Integer call() {
-            while (appleNum >= 3) {
-                System.out.println(String.format("thread %s |  %s  |  %s  |  appleNum: %s",
+            while (thingNum >= 3) {
+                System.out.println(String.format("thread %s |  %s  |  %s  |  thingNum: %s",
                         Thread.currentThread().getId(),
                         Thread.currentThread().getName(),
                         System.currentTimeMillis(),
-                        appleNum--));
+                        thingNum--));
             }
-            return appleNum;
+            return thingNum;
         }
     }
 
     public static class TestRunnable implements Runnable {
-        public static int appleNum = 5;
+        public static int thingNum = 5;
 
         @Override
         public void run() {
-            while (appleNum >= 0) {
-                System.out.println(String.format("thread %s |  %s  |  %s  |  appleNum: %s",
+            while (thingNum >= 0) {
+                System.out.println(String.format("thread %s |  %s  |  %s  |  thingNum: %s",
                         Thread.currentThread().getId(),
                         Thread.currentThread().getName(),
                         System.currentTimeMillis(),
-                        appleNum--));
+                        thingNum--));
             }
         }
     }

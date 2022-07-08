@@ -9,16 +9,16 @@ public class ExtendThread {
     }
 
     public static class ThreadTest extends Thread {
-        public static int appleNum = 5;
+        public static int thingNum = 5;
 
         @Override
         public synchronized void run() {
-            while (appleNum >= 0) {
-                System.out.println(String.format("thread %s |  %s  |  %s  |  appleNum: %s",
+            while (thingNum >= 0) {
+                System.out.println(String.format("thread %s |  %s  |  %s  |  thingNum: %s",
                         Thread.currentThread().getId(),
                         Thread.currentThread().getName(),
                         System.currentTimeMillis(),
-                        appleNum--));
+                        thingNum--));
             }
         }
     }

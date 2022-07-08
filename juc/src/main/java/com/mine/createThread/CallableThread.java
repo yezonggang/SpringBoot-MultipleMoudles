@@ -5,7 +5,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
 public class CallableThread {
+
     public static void main(String[] args) throws ExecutionException, InterruptedException {
+        System.out.println("----------------起床准备做事情");
         FutureTask futureTask = new FutureTask(new TestCallable());
         new Thread(futureTask, "B").start();
 
@@ -18,18 +20,18 @@ public class CallableThread {
 
 
     public static class TestCallable implements Callable<Integer> {
-        public static int appleNum = 5;
+        public static int thingNum = 5;
 
         @Override
         public synchronized Integer call() {
-            while (appleNum >= 0) {
-                System.out.println(String.format("thread %s |  %s  |  %s  |  appleNum: %s",
+            while (thingNum > 0) {
+                System.out.println(String.format("thread %s |  %s  |  %s  |  还剩下: %s",
                         Thread.currentThread().getId(),
                         Thread.currentThread().getName(),
                         System.currentTimeMillis(),
-                        appleNum--));
+                        thingNum--));
             }
-            return appleNum ;
+            return thingNum ;
         }
     }
 

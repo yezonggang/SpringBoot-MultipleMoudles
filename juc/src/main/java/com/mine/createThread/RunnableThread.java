@@ -10,15 +10,15 @@ public class RunnableThread {
 
     }
     public static class TestRunnable implements Runnable{
-        public static int appleNum = 5;
+        public static int thingNum = 5;
         @Override
         public void run() {
-            while (appleNum >= 0) {
-                System.out.println(String.format("thread %s |  %s  |  %s  |  appleNum: %s",
+            while (thingNum >= 0) {
+                System.out.println(String.format("thread %s |  %s  |  %s  |  thingNum: %s",
                         Thread.currentThread().getId(),
                         Thread.currentThread().getName(),
                         System.currentTimeMillis(),
-                        appleNum--));
+                        thingNum--));
             }
         }
     }

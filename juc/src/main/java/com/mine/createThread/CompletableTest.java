@@ -16,16 +16,16 @@ public class CompletableTest {
                 new ThreadPoolExecutor.DiscardOldestPolicy());  //队列满了，尝试去和最早的竞争，也不会抛出异常！
 
         CompletableFuture cf = CompletableFuture.supplyAsync(() -> {
-            int appleNum = 5;
+            int thingNum = 5;
             System.out.println("-------------分身取吃苹果");
-            while (appleNum >= 0) {
+            while (thingNum >= 0) {
                 System.out.println(String.format("thread %s |  %s  |  %s  |  剩下: %s",
                         Thread.currentThread().getId(),
                         Thread.currentThread().getName(),
                         System.currentTimeMillis(),
-                        appleNum--));
+                        thingNum--));
             }
-            return appleNum+1;
+            return thingNum+1;
         });
 
 
