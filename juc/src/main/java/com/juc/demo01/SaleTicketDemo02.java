@@ -37,6 +37,7 @@ class Ticket2 {
            // 业务代码
 
             if (number>0){
+                Thread.sleep(500);
                 System.out.println(Thread.currentThread().getName()+"卖出了"+(number--)+"票,剩余："+number);
             }
 

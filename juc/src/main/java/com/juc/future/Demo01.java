@@ -30,7 +30,7 @@ public class Demo01 {
         // 返回的是错误信息；
         CompletableFuture<Integer> completableFuture = CompletableFuture.supplyAsync(()->{
             System.out.println(Thread.currentThread().getName()+"supplyAsync=>Integer");
-            int i = 10/0;
+            //int i = 10/0;
             return 1024;
         });
 
