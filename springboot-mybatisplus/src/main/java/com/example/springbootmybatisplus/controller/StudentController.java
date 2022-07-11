@@ -36,8 +36,5 @@ public class StudentController {
         return studentService.getAll().thenCompose(resp ->
                 resp.left.map(apiError -> CompletableFuture.completedFuture(ResponseData.fail(apiError)))
                         .orElseGet(() -> CompletableFuture.completedFuture(ResponseData.success(resp.right))));
-
-        // return "xxxx";
-        //return ResponseData.success("studentService.getAll()");
     }
 }

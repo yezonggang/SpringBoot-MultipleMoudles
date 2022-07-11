@@ -23,6 +23,8 @@ Ctrl + Shift + l   注释选中代码块
 Ctrl + z   回滚
 Ctrl + Shift + z  撤销回滚
 Ctrl + Shift + F10  运行当前程序
+Ctrl + /   //双斜杠注释
+Ctrl + Shift + /   代码段注释
 
 
 

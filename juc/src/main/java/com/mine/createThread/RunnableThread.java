@@ -6,8 +6,6 @@ public class RunnableThread {
         thread1.start();
         Thread thread2 = new Thread(new TestRunnable(), "B");
         thread2.start();
-
-
     }
     public static class TestRunnable implements Runnable{
         public static int thingNum = 5;
