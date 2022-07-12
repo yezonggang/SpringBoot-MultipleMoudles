@@ -1,11 +1,7 @@
 package com.example.springbootmybatisplus.controller;
 
 
-import com.example.springbootmybatisplus.entity.Student;
 import com.example.springbootmybatisplus.service.impl.StudentServiceImpl;
-import com.example.springbootmybatisplus.utils.ApiError;
-import com.example.springbootmybatisplus.utils.ApiErrorEnum;
-import com.example.springbootmybatisplus.utils.Either;
 import com.example.springbootmybatisplus.utils.ResponseData;
 import io.swagger.annotations.Api;
 import org.junit.Test;

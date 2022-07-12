@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
  * @since 2022-07-12
  */
 @Service
-public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService, UserDetailsService {
+public class UserServiceImpl extends ServiceImpl<UserMapper, UserEntity> implements IUserService, UserDetailsService {
 
         @Autowired
         UserMapper userMapper;
@@ -51,14 +51,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
         @Override
         public UserDetails loadUserByUsername(String s){
-            LambdaQueryWrapper<User> queryWrapper = new QueryWrapper<User>().lambda().eq(User::getUsername, s);
-            User user = userMapper.selectOne(queryWrapper);
+            LambdaQueryWrapper<UserEntity> queryWrapper = new QueryWrapper<UserEntity>().lambda().eq(UserEntity::getUsername, s);
+            UserEntity user = userMapper.selectOne(queryWrapper);
             if (user!= null) {
                 SysUserDetail detail = new SysUserDetail();
                 detail.setId(user.getId());
                 detail.setUsername(user.getUsername());
                 detail.setPassword(user.getPassword());
-                AccountState accountState = accountStateDao.selectById(user.getId());
+                AccountStateEntity accountState = accountStateDao.selectById(user.getId());
                 detail.setAccountNonExpired(accountState.getAccountNonExpired() == 1);
                 detail.setAccountNonLocked(accountState.getAccountNonLocked() == 1);
                 detail.setEnabled(accountState.getEnabled() == 1);
@@ -103,12 +103,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
         public void getMenu (String username, HttpServletRequest request, HttpServletResponse response) throws
         IOException {
-            User entity = userMapper.selectOne(new QueryWrapper<User>().lambda().eq(User::getUsername,username));
+            UserEntity entity = userMapper.selectOne(new QueryWrapper<UserEntity>().lambda().eq(UserEntity::getUsername,username));
             Integer userid = entity.getId();
-            List<Role> roles =roleDao.getRoleByUserId(userid);
+            List<RoleEntity> roles =roleDao.getRoleByUserId(userid);
             //List<Menu> menus = new ArrayList<>();
             List<Map<String, Object>> data = new ArrayList<>();
-            for (Role role : roles) {
+            for (RoleEntity role : roles) {
                 List<Map<String, Object>> mapList = menuDao.getMainMenu(role.getId());
                 for (Map<String, Object> one : mapList) {
                     Map<String, Object> temp = new HashMap<>(one);

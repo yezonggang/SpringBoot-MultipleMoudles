@@ -15,7 +15,7 @@ import java.util.Collections;
  * 跨域配置
  * @author cpms
  */
-//@Configuration
+@Configuration
 public class CrossDomainConfig {
 
     @Autowired

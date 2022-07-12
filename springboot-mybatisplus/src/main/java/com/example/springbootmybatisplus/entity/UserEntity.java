@@ -18,20 +18,32 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@TableName("ROLE_USER")
-@ApiModel(value="RoleUser对象", description="")
-public class RoleUser implements Serializable {
+@TableName("USER")
+@ApiModel(value="User对象", description="")
+public class UserEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @TableField("ID")
     private Integer id;
 
-    @TableField("USERID")
-    private Integer userid;
+    @TableField("USERNAME")
+    private String username;
 
-    @TableField("ROLE_ID")
-    private Integer roleId;
+    @TableField("PASSWORD")
+    private String password;
+
+    @TableField("PHONE")
+    private String phone;
+
+    @TableField("EMAIL")
+    private String email;
+
+    @TableField("CREATE_DATE")
+    private String createDate;
+
+    @TableField("UPDATE_DATE")
+    private String updateDate;
 
 
 }

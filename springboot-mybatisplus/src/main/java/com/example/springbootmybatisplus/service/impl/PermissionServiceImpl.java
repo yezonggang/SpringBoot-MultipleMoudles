@@ -1,6 +1,6 @@
 package com.example.springbootmybatisplus.service.impl;
 
-import com.example.springbootmybatisplus.entity.Permission;
+import com.example.springbootmybatisplus.entity.PermissionEntity;
 import com.example.springbootmybatisplus.mapper.PermissionMapper;
 import com.example.springbootmybatisplus.service.IPermissionService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -15,6 +15,6 @@ import org.springframework.stereotype.Service;
  * @since 2022-07-12
  */
 @Service
-public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permission> implements IPermissionService {
+public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, PermissionEntity> implements IPermissionService {
 
 }

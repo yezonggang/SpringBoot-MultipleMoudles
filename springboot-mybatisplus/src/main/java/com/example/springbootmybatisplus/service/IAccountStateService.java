@@ -1,6 +1,6 @@
 package com.example.springbootmybatisplus.service;
 
-import com.example.springbootmybatisplus.entity.AccountState;
+import com.example.springbootmybatisplus.entity.AccountStateEntity;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author yzg
  * @since 2022-07-12
  */
-public interface IAccountStateService extends IService<AccountState> {
+public interface IAccountStateService extends IService<AccountStateEntity> {
 
 }

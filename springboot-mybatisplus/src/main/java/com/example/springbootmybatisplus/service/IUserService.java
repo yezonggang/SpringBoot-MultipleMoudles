@@ -1,8 +1,7 @@
 package com.example.springbootmybatisplus.service;
 
-import com.example.springbootmybatisplus.entity.User;
+import com.example.springbootmybatisplus.entity.UserEntity;
 import com.baomidou.mybatisplus.extension.service.IService;
-import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * <p>
@@ -12,6 +11,6 @@ import org.springframework.security.core.userdetails.UserDetails;
  * @author yzg
  * @since 2022-07-12
  */
-public interface IUserService extends IService<User>  {
+public interface IUserService extends IService<UserEntity>  {
 
 }

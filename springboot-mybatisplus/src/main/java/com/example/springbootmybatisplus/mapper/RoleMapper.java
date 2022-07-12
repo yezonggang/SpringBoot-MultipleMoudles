@@ -1,6 +1,6 @@
 package com.example.springbootmybatisplus.mapper;
 
-import com.example.springbootmybatisplus.entity.Role;
+import com.example.springbootmybatisplus.entity.RoleEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Component;
@@ -19,11 +19,11 @@ import java.util.Map;
 @Mapper
 @Component
 
-public interface RoleMapper extends BaseMapper<Role> {
+public interface RoleMapper extends BaseMapper<RoleEntity> {
 
     List<Map<String, Object>> getRoleList(Integer id);
 
     Object findAll();
 
-    List<Role> getRoleByUserId(Integer userid);
+    List<RoleEntity> getRoleByUserId(Integer userid);
 }

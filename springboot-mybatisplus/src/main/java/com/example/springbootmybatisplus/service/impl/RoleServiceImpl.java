@@ -1,6 +1,6 @@
 package com.example.springbootmybatisplus.service.impl;
 
-import com.example.springbootmybatisplus.entity.Role;
+import com.example.springbootmybatisplus.entity.RoleEntity;
 import com.example.springbootmybatisplus.mapper.RoleMapper;
 import com.example.springbootmybatisplus.service.IRoleService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -15,6 +15,6 @@ import org.springframework.stereotype.Service;
  * @since 2022-07-12
  */
 @Service
-public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IRoleService {
+public class RoleServiceImpl extends ServiceImpl<RoleMapper, RoleEntity> implements IRoleService {
 
 }

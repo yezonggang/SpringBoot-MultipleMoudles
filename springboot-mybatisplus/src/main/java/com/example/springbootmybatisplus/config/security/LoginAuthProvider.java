@@ -1,6 +1,7 @@
 package com.example.springbootmybatisplus.config.security;
 
 import com.example.springbootmybatisplus.service.IUserService;
+import com.example.springbootmybatisplus.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Component;
 public class LoginAuthProvider implements AuthenticationProvider {
 
     @Autowired
-    IUserService userServiceImpl;
+    UserServiceImpl userServiceImpl;
 
     @Override
     public Authentication authenticate(Authentication auth) throws AuthenticationException {

@@ -1,6 +1,6 @@
 package com.example.springbootmybatisplus.service.impl;
 
-import com.example.springbootmybatisplus.entity.Menu;
+import com.example.springbootmybatisplus.entity.MenuEntity;
 import com.example.springbootmybatisplus.mapper.MenuMapper;
 import com.example.springbootmybatisplus.service.IMenuService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -15,6 +15,6 @@ import org.springframework.stereotype.Service;
  * @since 2022-07-12
  */
 @Service
-public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IMenuService {
+public class MenuServiceImpl extends ServiceImpl<MenuMapper, MenuEntity> implements IMenuService {
 
 }

@@ -20,7 +20,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 @TableName("ROLE")
 @ApiModel(value="Role对象", description="")
-public class Role implements Serializable {
+public class RoleEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

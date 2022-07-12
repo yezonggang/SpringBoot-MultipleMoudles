@@ -18,29 +18,30 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@TableName("PERMISSION")
-@ApiModel(value="Permission对象", description="")
-public class Permission implements Serializable {
+@TableName("ACCOUNT_STATE")
+@ApiModel(value="AccountState对象", description="")
+public class AccountStateEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    @TableField("USER_ID")
+    private String userId;
 
     @TableField("ID")
     private Integer id;
 
-    @TableField("NAME")
-    private String name;
+    @TableField("ACCOUNT_NON_EXPIRED")
+    private Integer accountNonExpired;
 
-    @TableField("DESCRIPTION")
-    private String description;
+    @TableField("ACCOUNT_NON_LOCKED")
+    private Integer accountNonLocked;
 
-    @TableField("URL")
-    private String url;
 
-    @TableField("PID")
-    private Integer pid;
+    @TableField("CREDENTIALS_NON_EXPIRED")
+    private Integer credentialsNonExpired;
 
-    @TableField("SORT")
-    private Integer sort;
+    @TableField("ENABLED")
+    private Integer enabled;
 
 
 }

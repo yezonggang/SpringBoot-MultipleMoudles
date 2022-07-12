@@ -1,6 +1,6 @@
 package com.example.springbootmybatisplus.service;
 
-import com.example.springbootmybatisplus.entity.Permission;
+import com.example.springbootmybatisplus.entity.PermissionEntity;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author yzg
  * @since 2022-07-12
  */
-public interface IPermissionService extends IService<Permission> {
+public interface IPermissionService extends IService<PermissionEntity> {
 
 }

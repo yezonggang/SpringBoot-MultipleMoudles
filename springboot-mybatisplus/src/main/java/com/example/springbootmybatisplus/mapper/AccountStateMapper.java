@@ -1,6 +1,6 @@
 package com.example.springbootmybatisplus.mapper;
 
-import com.example.springbootmybatisplus.entity.AccountState;
+import com.example.springbootmybatisplus.entity.AccountStateEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Component;
@@ -16,6 +16,6 @@ import org.springframework.stereotype.Component;
 @Mapper
 @Component
 
-public interface AccountStateMapper extends BaseMapper<AccountState> {
+public interface AccountStateMapper extends BaseMapper<AccountStateEntity> {
 
 }

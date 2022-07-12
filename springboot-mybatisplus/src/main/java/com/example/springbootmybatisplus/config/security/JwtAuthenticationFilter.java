@@ -1,6 +1,7 @@
 package com.example.springbootmybatisplus.config.security;
 
 import com.example.springbootmybatisplus.service.IUserService;
+import com.example.springbootmybatisplus.service.impl.UserServiceImpl;
 import com.example.springbootmybatisplus.utils.JsonWebTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,7 +26,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     JsonWebTokenUtil tokenUtil;
     @Autowired
-    IUserService userServiceImpl;
+    UserServiceImpl userServiceImpl;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)

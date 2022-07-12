@@ -1,6 +1,6 @@
 package com.example.springbootmybatisplus.mapper;
 
-import com.example.springbootmybatisplus.entity.User;
+import com.example.springbootmybatisplus.entity.UserEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Component;
@@ -15,6 +15,6 @@ import org.springframework.stereotype.Component;
  */
 @Mapper
 @Component
-public interface UserMapper extends BaseMapper<User> {
+public interface UserMapper extends BaseMapper<UserEntity> {
 
 }

@@ -1,6 +1,6 @@
 package com.example.springbootmybatisplus.mapper;
 
-import com.example.springbootmybatisplus.entity.RoleUser;
+import com.example.springbootmybatisplus.entity.RoleUserEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Component;
@@ -16,6 +16,6 @@ import org.springframework.stereotype.Component;
 @Mapper
 @Component
 
-public interface RoleUserMapper extends BaseMapper<RoleUser> {
+public interface RoleUserMapper extends BaseMapper<RoleUserEntity> {
 
 }

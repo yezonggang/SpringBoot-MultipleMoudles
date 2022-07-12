@@ -1,6 +1,6 @@
 package com.example.springbootmybatisplus.service.impl;
 
-import com.example.springbootmybatisplus.entity.AccountState;
+import com.example.springbootmybatisplus.entity.AccountStateEntity;
 import com.example.springbootmybatisplus.mapper.AccountStateMapper;
 import com.example.springbootmybatisplus.service.IAccountStateService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -15,6 +15,6 @@ import org.springframework.stereotype.Service;
  * @since 2022-07-12
  */
 @Service
-public class AccountStateServiceImpl extends ServiceImpl<AccountStateMapper, AccountState> implements IAccountStateService {
+public class AccountStateServiceImpl extends ServiceImpl<AccountStateMapper, AccountStateEntity> implements IAccountStateService {
 
 }

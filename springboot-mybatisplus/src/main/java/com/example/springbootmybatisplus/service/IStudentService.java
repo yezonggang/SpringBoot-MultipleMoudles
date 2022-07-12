@@ -1,6 +1,6 @@
 package com.example.springbootmybatisplus.service;
 
-import com.example.springbootmybatisplus.entity.Student;
+import com.example.springbootmybatisplus.entity.StudentEntity;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.springbootmybatisplus.utils.ApiError;
 import com.example.springbootmybatisplus.utils.Either;
@@ -16,7 +16,7 @@ import java.util.concurrent.CompletableFuture;
  * @author yzg
  * @since 2022-07-02
  */
-public interface IStudentService extends IService<Student> {
-    CompletableFuture<Either<ApiError,List<Student>>> getAll() throws Throwable;
+public interface IStudentService extends IService<StudentEntity> {
+    CompletableFuture<Either<ApiError,List<StudentEntity>>> getAll() throws Throwable;
 
 }
