@@ -143,8 +143,8 @@ public class CodeGenerator {
         //strategy.setInclude(scanner("表名，多个英文逗号分割").split(","));
         strategy.setControllerMappingHyphenStyle(true);
         strategy.setTablePrefix(pc.getModuleName() + "_");
-        strategy.setInclude("MAGIC_API_FILE");
-        strategy.setInclude("STUDENT");
+        strategy.setInclude("ACCOUNT_STATE");
+        //strategy.setInclude("ACCOUNT_STATE","PERMISSION","REFRESH_TOKEN","ROLE","ROLE_USER","USER");
         mpg.setStrategy(strategy);
         mpg.setTemplateEngine(new FreemarkerTemplateEngine());
         mpg.execute();

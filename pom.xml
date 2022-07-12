@@ -80,7 +80,6 @@
     <modules>
         <module>springboot-demo</module>
         <module>springboot-mybatisplus</module>
-        <module>security</module>
         <module>juc</module>
     </modules>
 </project>

@@ -1,12 +1,4 @@
 # sprintboot-parent
-测试工程，参考教程：
-
-b站小灰灰的并发编程（代码已在工程）：https://www.bilibili.com/video/BV1B7411L7tE
-
-狂神说java代码：https://gitee.com/kuangstudy
-
-狂神说b站教程：https://www.bilibili.com/video/BV17E411N7KN
-
 
 Ctrl + Shift + u   大小写字母转换
 Ctrl+alt + t  选中代码，按快捷键可直接try catch 此段代码
@@ -25,6 +17,20 @@ Ctrl + Shift + z  撤销回滚
 Ctrl + Shift + F10  运行当前程序
 Ctrl + /   //双斜杠注释
 Ctrl + Shift + /   代码段注释
+Ctrl + Shift + u   带小写转换
+
+--------------------h2数据库建表
+
+create table STUDENT
+(
+    ID      INT auto_increment,
+    AGE     INT,
+    GENDER  VARCHAR,
+    CLASSES VARCHAR,
+    NAME    VARCHAR,
+    constraint STUDENT_PK
+        primary key (ID)
+);
 
 
 
