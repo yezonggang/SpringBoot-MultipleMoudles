@@ -1,15 +1,20 @@
 spring:
   application:
     name: nacos-service
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://39.103.218.1:3306/nacos_config?characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&useUnicode=true&useSSL=false&serverTimezone=UTC
+    data-username: root
+    data-password: 123456
   cloud:
     nacos:
       server-addr: 127.0.0.1:8848 #nacos服务地址
       discovery:
-        namespace: df843b7b-1ff4-495a-baef-6b1296c531ed
+        namespace: 2461b49b-7d7d-4d29-8b7e-4a4413621e1c
         enabled: true #默认值
       config:
         file-extension: yml #文件后缀名
-        namespace: df843b7b-1ff4-495a-baef-6b1296c531ed
+        namespace: 2461b49b-7d7d-4d29-8b7e-4a4413621e1c
         enabled: true #默认值
         refresh-enabled: true # 运行自动刷新配置
         prefix: nacos-service #配置文件前缀
