@@ -123,5 +123,6 @@
         <module>springboot-mybatisplus</module>
         <module>juc</module>
         <module>springboot-nacos</module>
+        <module>springcloud-gateway</module>
     </modules>
 </project>
