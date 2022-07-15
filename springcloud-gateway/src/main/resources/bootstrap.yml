@@ -1,6 +1,4 @@
 spring:
-  application:
-    name: gateway-service
   cloud:
     nacos:
       server-addr: 127.0.0.1:8848 #nacos服务地址
@@ -12,7 +10,7 @@ spring:
         namespace: 2461b49b-7d7d-4d29-8b7e-4a4413621e1c
         enabled: true #默认值
         refresh-enabled: true # 运行自动刷新配置
-        prefix: nacos-service #配置文件前缀
+        prefix: gateway-service #配置文件前缀
 t1: test
 #userservice: # 负载均衡规则
 #  ribbon:

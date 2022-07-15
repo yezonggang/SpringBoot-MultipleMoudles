@@ -17,10 +17,6 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -124,5 +120,6 @@
         <module>juc</module>
         <module>springboot-nacos</module>
         <module>springcloud-gateway</module>
+        <module>springcloud-login</module>
     </modules>
 </project>
