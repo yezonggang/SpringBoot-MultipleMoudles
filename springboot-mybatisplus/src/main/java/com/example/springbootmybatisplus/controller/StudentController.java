@@ -29,8 +29,9 @@ public class StudentController {
     @GetMapping("/get")
     @Test
     public CompletableFuture<ResponseData> getAll() {
-        return studentService.getAll().thenCompose(resp ->
+        return CompletableFuture.completedFuture(ResponseData.success("xxxxxxxxx"));
+       /* return studentService.getAll().thenCompose(resp ->
                 resp.left.map(apiError -> CompletableFuture.completedFuture(ResponseData.fail(apiError)))
                         .orElseGet(() -> CompletableFuture.completedFuture(ResponseData.success(resp.right))));
-    }
+    */}
 }

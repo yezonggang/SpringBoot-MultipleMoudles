@@ -1,4 +1,4 @@
-# sprintboot-parent
+# springboot-parent
 
 Ctrl + Shift + u   大小写字母转换
 Ctrl+alt + t  选中代码，按快捷键可直接try catch 此段代码
