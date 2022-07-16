@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
 /**
  * <p>
@@ -14,24 +15,37 @@ import lombok.EqualsAndHashCode;
  * </p>
  *
  * @author yzg
- * @since 2022-07-12
+ * @since 2022-07-16
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@TableName("REFRESH_TOKEN")
-@ApiModel(value="RefreshToken对象", description="")
-public class RefreshToken implements Serializable {
+@Accessors(chain = true)
+@TableName("USER")
+@ApiModel(value="User对象", description="")
+public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @TableField("ID")
-    private String id;
+    private Integer id;
 
     @TableField("USERNAME")
     private String username;
 
-    @TableField("TOKEN")
-    private String token;
+    @TableField("PASSWORD")
+    private String password;
+
+    @TableField("PHONE")
+    private String phone;
+
+    @TableField("EMAIL")
+    private String email;
+
+    @TableField("CREATE_DATE")
+    private String createDate;
+
+    @TableField("UPDATE_DATE")
+    private String updateDate;
 
 
 }

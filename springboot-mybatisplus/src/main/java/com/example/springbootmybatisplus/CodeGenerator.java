@@ -1,3 +1,4 @@
+/*
 package com.example.springbootmybatisplus;
 
 import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;
@@ -21,17 +22,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+*/
 /**
  * @author
  * @since 2018/12/13
- */// 演示例子，执行 main 方法控制台输入模块表名回车自动生成对应项目目录中
+ *//*
+// 演示例子，执行 main 方法控制台输入模块表名回车自动生成对应项目目录中
 public class CodeGenerator {
 
-    /**
+    */
+/**
      * <p>
      * 读取控制台内容
      * </p>
-     */
+     *//*
+
     public static String scanner(String tip) {
         Scanner scanner = new Scanner(System.in);
         StringBuilder help = new StringBuilder();
@@ -99,7 +104,8 @@ public class CodeGenerator {
                         + "/" + tableInfo.getEntityName() + "Mapper" + StringPool.DOT_XML;
             }
         });
-        /*
+        */
+/*
         cfg.setFileCreate(new IFileCreate() {
             @Override
             public boolean isCreate(ConfigBuilder configBuilder, FileType fileType, String filePath) {
@@ -113,7 +119,8 @@ public class CodeGenerator {
                 return true;
             }
         });
-        */
+        *//*
+
         cfg.setFileOutConfigList(focList);
         mpg.setCfg(cfg);
 
@@ -143,7 +150,7 @@ public class CodeGenerator {
         //strategy.setInclude(scanner("表名，多个英文逗号分割").split(","));
         strategy.setControllerMappingHyphenStyle(true);
         strategy.setTablePrefix(pc.getModuleName() + "_");
-        strategy.setInclude("ACCOUNT_STATE");
+        strategy.setInclude("USER");
         //strategy.setInclude("ACCOUNT_STATE","PERMISSION","REFRESH_TOKEN","ROLE","ROLE_USER","USER");
         mpg.setStrategy(strategy);
         mpg.setTemplateEngine(new FreemarkerTemplateEngine());
@@ -151,3 +158,4 @@ public class CodeGenerator {
     }
 
 }
+*/

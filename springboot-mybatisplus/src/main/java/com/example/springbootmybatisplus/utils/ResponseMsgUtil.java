@@ -10,7 +10,7 @@ import java.util.Map;
 
 /**
  * 响应信息工具类
- * @author cpms
+ * @author yzg
  */
 public class ResponseMsgUtil {
 
