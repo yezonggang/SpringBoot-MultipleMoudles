@@ -1,4 +1,4 @@
-package com.example.springcloudGateway;
+package com.example.springcloudgateway;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.sql.DataSourceDefinition;
+
 @EnableDiscoveryClient
-@SpringBootApplication
+@SpringBootApplication(exclude = DataSourceDefinition.class)
 
 public class GatewayApplication {
 

@@ -72,6 +72,11 @@ public class Oauth2ServerConfig extends AuthorizationServerConfigurerAdapter {
                 .tokenEnhancer(enhancerChain);
     }
 
+    /**
+     * 允许表单认证
+     * @param security
+     * @throws Exception
+     */
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
         security.allowFormAuthenticationForClients();
