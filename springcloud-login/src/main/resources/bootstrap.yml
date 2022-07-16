@@ -13,6 +13,18 @@ spring:
         enabled: true #默认值
         refresh-enabled: true # 运行自动刷新配置
         prefix: login-service #配置文件前缀
+---
+spring:
+  profiles: login-service-master
+server:
+  port: 9093
+
+---
+spring:
+  profiles: login-service-slave
+server:
+  port: 9094
+
 t1: test
 #userservice: # 负载均衡规则
 #  ribbon:
