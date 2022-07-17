@@ -1,7 +1,7 @@
 package com.example.springbootmybatisplus.config.security;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.example.springbootmybatisplus.entity.RefreshToken;
+import com.example.springbootmybatisplus.entity.RefreshTokenEntity;
 import com.example.springbootmybatisplus.mapper.RefreshTokenMapper;
 import com.example.springbootmybatisplus.service.IRefreshTokenService;
 import com.example.springbootmybatisplus.utils.ResponseMsgUtil;
@@ -78,20 +78,20 @@ public class MasSecurity extends WebSecurityConfigurerAdapter {
             UserDetails details = (UserDetails) authentication.getPrincipal();
             List<GrantedAuthority> roles = (List<GrantedAuthority>) details.getAuthorities();
             //登录时同时生成refreshToken，保存到表中
-            RefreshToken token = new RefreshToken();
-            token.setUsername(details.getUsername());
+            RefreshTokenEntity token = new RefreshTokenEntity();
+            token.setUsename(details.getUsername());
             String refreshToken = jsonWebTokenUtil.generateRefreshToken(details, roles.get(0).getAuthority());
             token.setToken(refreshToken);
-            LambdaQueryWrapper<RefreshToken> queryWrapper = new QueryWrapper<RefreshToken>().lambda().eq(RefreshToken::getUsername, details.getUsername());
+            LambdaQueryWrapper<RefreshTokenEntity> queryWrapper = new QueryWrapper<RefreshTokenEntity>().lambda().eq(RefreshTokenEntity::getUsename, details.getUsername());
             int countAll = refreshTokenMapper.selectCount(queryWrapper);
             if (countAll > 0) {
                 if(countAll == 1){
-                    RefreshToken refreshTokenTemp = refreshTokenMapper.selectOne(queryWrapper);
+                    RefreshTokenEntity refreshTokenTemp = refreshTokenMapper.selectOne(queryWrapper);
                     refreshTokenTemp.setToken(refreshToken);
                     refreshTokenMapper.update(refreshTokenTemp, queryWrapper);
                 }else{
-                    List<RefreshToken> refreshTokenList = refreshTokenMapper.selectList(queryWrapper);
-                    for(RefreshToken var:refreshTokenList){
+                    List<RefreshTokenEntity> refreshTokenList = refreshTokenMapper.selectList(queryWrapper);
+                    for(RefreshTokenEntity var:refreshTokenList){
                         var.setToken(refreshToken);
                     }
                     refreshTokenService.saveOrUpdateBatch(refreshTokenList);

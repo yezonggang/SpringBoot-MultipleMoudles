@@ -1,6 +1,6 @@
 package com.example.springbootmybatisplus.service;
 
-import com.example.springbootmybatisplus.entity.RefreshToken;
+import com.example.springbootmybatisplus.entity.RefreshTokenEntity;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -9,14 +9,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * </p>
  *
  * @author yzg
- * @since 2022-07-12
+ * @since 2022-07-17
  */
-public interface IRefreshTokenService extends IService<RefreshToken> {
+public interface IRefreshTokenService extends IService<RefreshTokenEntity> {
 
-    //    @Query(nativeQuery = true,value = "select count(1) from refresh_token where username=:username")
-    int existRefreshToken(String username);
-
-    //     @Query(nativeQuery = true,value = "update refresh_token set token= :#{#token.token} " +
-    //            "where username = :#{#token.username}")
-    void updateRefreshToken(RefreshToken token);
 }

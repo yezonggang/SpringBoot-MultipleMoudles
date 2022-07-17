@@ -1,6 +1,5 @@
-package com.example.springbootmybatisplus.mapper;
+package com.example.springbootmybatisplus.codeMoudleDemo;
 
-import com.example.springbootmybatisplus.entity.StudentEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Component;

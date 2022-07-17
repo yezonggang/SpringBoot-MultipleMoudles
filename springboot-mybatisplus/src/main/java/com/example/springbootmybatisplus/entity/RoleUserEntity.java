@@ -1,12 +1,11 @@
 package com.example.springbootmybatisplus.entity;
 
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
 /**
  * <p>
@@ -14,24 +13,19 @@ import lombok.EqualsAndHashCode;
  * </p>
  *
  * @author yzg
- * @since 2022-07-12
+ * @since 2022-07-17
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@TableName("ROLE_USER")
+@Accessors(chain = true)
 @ApiModel(value="RoleUser对象", description="")
 public class RoleUserEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableField("ID")
-    private Integer id;
+    private Long userId;
 
-    @TableField("USERID")
-    private Integer userid;
-
-    @TableField("ROLE_ID")
-    private Integer roleId;
+    private Long roleId;
 
 
 }

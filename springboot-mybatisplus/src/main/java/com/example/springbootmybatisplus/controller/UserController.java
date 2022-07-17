@@ -1,13 +1,10 @@
-package com.example.springbootmybatisplus.controller;
+package com.example.springbootmybatisplus;
 
 
-import com.example.springbootmybatisplus.service.AuthenticationFacade;
 import com.example.springbootmybatisplus.service.impl.UserServiceImpl;
+import com.example.springbootmybatisplus.utils.AuthenticationFacade;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,12 +33,6 @@ public class UserController {
         userService.checkLogin(request,response);
     }
 
-    @GetMapping("/menu")
-    public void getMenu(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Authentication authentication = authenticationFacade.getAuthentication();
-        String username =(String) authentication.getPrincipal();
-        userService.getMenu(username,request,response);
-    }
 
     @PostMapping("/refreshToken")
     public void refreshToken(HttpServletRequest request,HttpServletResponse response){

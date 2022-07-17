@@ -1,7 +1,6 @@
-package com.example.springbootmybatisplus.controller;
+package com.example.springbootmybatisplus.codeMoudleDemo;
 
 
-import com.example.springbootmybatisplus.service.impl.StudentServiceImpl;
 import com.example.springbootmybatisplus.utils.ResponseData;
 import io.swagger.annotations.Api;
 import org.junit.Test;

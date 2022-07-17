@@ -1,4 +1,4 @@
-package com.example.springbootmybatisplus.entity;
+package com.example.springbootmybatisplus.codeMoudleDemo;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;

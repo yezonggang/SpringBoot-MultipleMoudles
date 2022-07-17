@@ -1,12 +1,13 @@
 package com.example.springbootmybatisplus.entity;
 
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
 /**
  * <p>
@@ -14,33 +15,27 @@ import lombok.EqualsAndHashCode;
  * </p>
  *
  * @author yzg
- * @since 2022-07-12
+ * @since 2022-07-17
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@TableName("ACCOUNT_STATE")
+@Accessors(chain = true)
 @ApiModel(value="AccountState对象", description="")
 public class AccountStateEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableField("USER_ID")
-    private String userId;
+    @TableId(value = "id", type = IdType.AUTO)
+    private Long id;
 
-    @TableField("ID")
-    private Integer id;
+    private String userid;
 
-    @TableField("ACCOUNT_NON_EXPIRED")
     private Integer accountNonExpired;
 
-    @TableField("ACCOUNT_NON_LOCKED")
     private Integer accountNonLocked;
 
-
-    @TableField("CREDENTIALS_NON_EXPIRED")
     private Integer credentialsNonExpired;
 
-    @TableField("ENABLED")
     private Integer enabled;
 
 

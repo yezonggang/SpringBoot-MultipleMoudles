@@ -1,10 +1,7 @@
-package com.example.springbootmybatisplus.service.impl;
+package com.example.springbootmybatisplus.codeMoudleDemo;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.example.springbootmybatisplus.entity.StudentEntity;
-import com.example.springbootmybatisplus.mapper.StudentMapper;
-import com.example.springbootmybatisplus.service.IStudentService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.springbootmybatisplus.utils.ApiError;
 import com.example.springbootmybatisplus.utils.ApiErrorEnum;

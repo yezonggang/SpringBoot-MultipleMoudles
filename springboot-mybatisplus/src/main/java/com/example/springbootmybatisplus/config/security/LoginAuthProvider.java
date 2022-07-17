@@ -1,6 +1,5 @@
 package com.example.springbootmybatisplus.config.security;
 
-import com.example.springbootmybatisplus.service.IUserService;
 import com.example.springbootmybatisplus.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.*;

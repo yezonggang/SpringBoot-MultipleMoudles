@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
  * </p>
  *
  * @author yzg
- * @since 2022-07-12
+ * @since 2022-07-17
  */
 @RestController
-@RequestMapping("//account-state")
+@RequestMapping("/account-state")
 public class AccountStateController {
 
 }

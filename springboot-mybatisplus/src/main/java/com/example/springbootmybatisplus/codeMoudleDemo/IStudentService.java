@@ -1,6 +1,5 @@
-package com.example.springbootmybatisplus.service;
+package com.example.springbootmybatisplus.codeMoudleDemo;
 
-import com.example.springbootmybatisplus.entity.StudentEntity;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.springbootmybatisplus.utils.ApiError;
 import com.example.springbootmybatisplus.utils.Either;

@@ -1,9 +1,8 @@
 package com.example.springbootmybatisplus.mapper;
 
-import com.example.springbootmybatisplus.entity.RefreshToken;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.example.springbootmybatisplus.entity.RefreshTokenEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.apache.ibatis.annotations.Mapper;
-import org.springframework.stereotype.Component;
 
 /**
  * <p>
@@ -11,12 +10,11 @@ import org.springframework.stereotype.Component;
  * </p>
  *
  * @author yzg
- * @since 2022-07-12
+ * @since 2022-07-17
  */
-@Mapper
-@Component
-
-public interface RefreshTokenMapper extends BaseMapper<RefreshToken> {
+public interface RefreshTokenMapper extends BaseMapper<RefreshTokenEntity> {
 
     String getRefreshToken(String username);
+
+    int selectCount(LambdaQueryWrapper<RefreshTokenEntity> queryWrapper);
 }

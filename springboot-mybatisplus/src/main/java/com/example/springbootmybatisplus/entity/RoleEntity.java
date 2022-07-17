@@ -1,12 +1,13 @@
 package com.example.springbootmybatisplus.entity;
 
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
 /**
  * <p>
@@ -14,26 +15,23 @@ import lombok.EqualsAndHashCode;
  * </p>
  *
  * @author yzg
- * @since 2022-07-12
+ * @since 2022-07-17
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@TableName("ROLE")
+@Accessors(chain = true)
 @ApiModel(value="Role对象", description="")
 public class RoleEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableField("ID")
-    private Integer id;
+    @TableId(value = "id", type = IdType.AUTO)
+    private Long id;
 
-    @TableField("NAME")
     private String name;
 
-    @TableField("CODE")
     private String code;
 
-    @TableField("DES")
     private String des;
 
 

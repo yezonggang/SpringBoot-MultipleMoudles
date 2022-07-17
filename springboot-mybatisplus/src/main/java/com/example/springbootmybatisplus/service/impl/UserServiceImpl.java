@@ -2,11 +2,11 @@ package com.example.springbootmybatisplus.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.example.springbootmybatisplus.entity.*;
-import com.example.springbootmybatisplus.mapper.*;
-import com.example.springbootmybatisplus.service.IUserService;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.springbootmybatisplus.config.security.JsonWebTokenUtil;
+import com.example.springbootmybatisplus.entity.*;
+import com.example.springbootmybatisplus.mapper.*;
 import com.example.springbootmybatisplus.utils.ResponseMsgUtil;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
@@ -24,7 +24,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -35,22 +34,21 @@ import java.util.stream.Collectors;
  * @since 2022-07-12
  */
 @Service
-public class UserServiceImpl extends ServiceImpl<UserMapper, UserEntity> implements IUserService, UserDetailsService {
+public class UserServiceImpl extends ServiceImpl<UserMapper, UserEntity> implements UserDetailsService, IService<UserEntity> {
 
         @Autowired
         UserMapper userMapper;
         @Autowired
         AccountStateMapper accountStateDao;
         @Autowired
-        RoleMapper roleDao;
-        @Autowired
-        MenuMapper menuDao;
-        @Autowired
         RefreshTokenMapper refreshTokenDao;
         @Autowired
         JsonWebTokenUtil jwtTokenUtil;
         @Autowired
         RoleUserMapper roleUserMapper;
+
+        @Autowired
+        RoleMapper roleDao;
 
     private static final Logger logger =LoggerFactory.getLogger(UserServiceImpl.class);
         @Override
@@ -60,11 +58,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserEntity> impleme
             UserEntity user = userMapper.selectOne(queryWrapper);
             if (user!= null) {
                 SysUserDetailEntity detail = new SysUserDetailEntity();
-                detail.setId(user.getId());
+                detail.setId(Math.toIntExact(user.getId()));
                 detail.setUsername(user.getUsername());
                 detail.setPassword(user.getPassword());
                 logger.info(String.format("xxxxxxxxxxuser_id,%s",user.getId()));
-                AccountStateEntity accountState = accountStateDao.selectOne(new QueryWrapper<AccountStateEntity>().lambda().eq(AccountStateEntity::getUserId,user.getId()));
+                AccountStateEntity accountState = accountStateDao.selectOne(new QueryWrapper<AccountStateEntity>().lambda().eq(AccountStateEntity::getUserid,user.getId()));
                 detail.setAccountNonExpired(accountState.getAccountNonExpired() == 1);
                 detail.setAccountNonLocked(accountState.getAccountNonLocked() == 1);
                 detail.setEnabled(accountState.getEnabled() == 1);
@@ -72,7 +70,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserEntity> impleme
                 //查询用户权限
                 List<GrantedAuthority> authorities = new ArrayList<>();
                 // 从RoleUser表拿到admin用户所有的role角色，他可以是admin超用户，也有普通用户权限
-                LambdaQueryWrapper<RoleUserEntity> roleUserEntityQueryWrapper = new QueryWrapper<RoleUserEntity>().lambda().eq(RoleUserEntity::getUserid, user.getId());
+                LambdaQueryWrapper<RoleUserEntity> roleUserEntityQueryWrapper = new QueryWrapper<RoleUserEntity>().lambda().eq(RoleUserEntity::getUserId, user.getId());
                 List<RoleUserEntity> roleUserEntities = roleUserMapper.selectList(roleUserEntityQueryWrapper);
                 for(RoleUserEntity roleUserEntity:roleUserEntities){
                     RoleEntity roleTemp = roleDao.selectOne(new QueryWrapper<RoleEntity>().lambda().eq(RoleEntity::getId, roleUserEntity.getRoleId()));
@@ -96,7 +94,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserEntity> impleme
                         ResponseMsgUtil.sendSuccessMsg("已登录", null, response);
                     } else {
                         //如果jwt过期，则获取refresh_token，判断refresh_token是否过期，不过期则刷新token返回前端
-                        String refreshToken = refreshTokenDao.selectOne(new QueryWrapper<RefreshToken>().lambda().eq(RefreshToken::getUsername, username)).getToken();
+                        String refreshToken = refreshTokenDao.selectOne(new QueryWrapper<RefreshTokenEntity>().lambda().eq(RefreshTokenEntity::getUsename, username)).getToken();
                         if (jwtTokenUtil.validateToken(refreshToken, userDetails)) {
                             ResponseMsgUtil.sendSuccessMsg("刷新jwt", jwtTokenUtil.refreshToken(token), response);
                         } else {
@@ -109,6 +107,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserEntity> impleme
             }
 
         }
+/*
 
         public void getMenu (String username, HttpServletRequest request, HttpServletResponse response) throws
         IOException {
@@ -135,15 +134,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserEntity> impleme
                             ), ArrayList::new
                     )
             );
-       /* for (Role role:roles){
+       */
+/* for (Role role:roles){
             List<Menu> menu=menuDao.getMainMenuList(role.getId());
             if (!menus.containsAll(menu)){
                 menus.addAll(menu);
             }
-        }*/
+        }*//*
+
             ResponseMsgUtil.sendSuccessMsg("查询成功", list, response);
         }
+*/
 
+/*
         //获取子菜单
         public Map<String, Object> buildSubmenu (Map < String, Object > parentMenu,int role_id){
             List<Map<String, Object>> secondMenu = menuDao.getSecondMenu((int) parentMenu.get("id"), role_id);
@@ -158,6 +161,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserEntity> impleme
             map.put("submenu", secondMenu);
             return map;
         }
+*/
 
         /**
          * 获取角色列表
