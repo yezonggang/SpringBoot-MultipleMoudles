@@ -1,6 +1,8 @@
 package com.example.springbootmybatisplus.config.security;
 
 import com.example.springbootmybatisplus.service.impl.UserServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class LoginAuthProvider implements AuthenticationProvider {
+    private static final Logger logger = LoggerFactory.getLogger(LoginAuthProvider.class);
 
     @Autowired
     UserServiceImpl userServiceImpl;
@@ -23,6 +26,7 @@ public class LoginAuthProvider implements AuthenticationProvider {
         //获取用户名和密码
         String username = auth.getName();
         String password = (String) auth.getCredentials();
+        logger.info("xxxxxxxxxxxxx"+username);
         UserDetails userDetail  = userServiceImpl.loadUserByUsername(username);
         if (!userDetail.isEnabled()){
             throw new DisabledException("该账号已禁用，请联系管理员");

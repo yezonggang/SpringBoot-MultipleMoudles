@@ -1,6 +1,8 @@
 package com.example.springbootmybatisplus.config.security;
 
 import com.example.springbootmybatisplus.service.impl.UserServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,6 +22,7 @@ import java.io.IOException;
  */
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
+    private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
     @Autowired
     JsonWebTokenUtil tokenUtil;
@@ -36,6 +39,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String username = tokenUtil.getUsernameFromToken(jwt);
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
+                logger.info("xxxxxxxxxxx"+username);
                 //通过用户名查询
                 UserDetails userDetails = userServiceImpl.loadUserByUsername(username);
                 //创建认证信息

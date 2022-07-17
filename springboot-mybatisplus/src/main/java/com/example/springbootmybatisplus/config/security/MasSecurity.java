@@ -5,6 +5,8 @@ import com.example.springbootmybatisplus.entity.RefreshTokenEntity;
 import com.example.springbootmybatisplus.mapper.RefreshTokenMapper;
 import com.example.springbootmybatisplus.service.IRefreshTokenService;
 import com.example.springbootmybatisplus.utils.ResponseMsgUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -33,6 +35,7 @@ import java.util.List;
  */
 @EnableWebSecurity
 public class MasSecurity extends WebSecurityConfigurerAdapter {
+    private static final Logger logger = LoggerFactory.getLogger(MasSecurity.class);
 
     @Autowired
     LoginAuthProvider loginAuthProvider;
@@ -67,7 +70,7 @@ public class MasSecurity extends WebSecurityConfigurerAdapter {
         //在UsernamePasswordAuthenticationFilter之前添加jwtAuthenticationFilter
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
         //在UsernamePasswordAuthenticationFilter之后添加jsonAuthenticationFilter
-            .addFilterAfter(jsonAuthenticationFilter(),UsernamePasswordAuthenticationFilter.class);
+            .addFilterAt(jsonAuthenticationFilter(),UsernamePasswordAuthenticationFilter.class);
     }
 
     //登录成功的处理类
@@ -78,6 +81,7 @@ public class MasSecurity extends WebSecurityConfigurerAdapter {
             UserDetails details = (UserDetails) authentication.getPrincipal();
             List<GrantedAuthority> roles = (List<GrantedAuthority>) details.getAuthorities();
             //登录时同时生成refreshToken，保存到表中
+            logger.info("beginnnnnnnnnnnnn");
             RefreshTokenEntity token = new RefreshTokenEntity();
             token.setUsename(details.getUsername());
             String refreshToken = jsonWebTokenUtil.generateRefreshToken(details, roles.get(0).getAuthority());

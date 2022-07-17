@@ -63,10 +63,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserEntity> impleme
                 detail.setPassword(user.getPassword());
                 logger.info(String.format("xxxxxxxxxxuser_id,%s",user.getId()));
                 AccountStateEntity accountState = accountStateDao.selectOne(new QueryWrapper<AccountStateEntity>().lambda().eq(AccountStateEntity::getUserid,user.getId()));
-                detail.setAccountNonExpired(accountState.getAccountNonExpired() == 1);
+/*                detail.setAccountNonExpired(accountState.getAccountNonExpired() == 1);
                 detail.setAccountNonLocked(accountState.getAccountNonLocked() == 1);
                 detail.setEnabled(accountState.getEnabled() == 1);
-                detail.setCredentialsNonExpired(accountState.getCredentialsNonExpired() == 1);
+                detail.setCredentialsNonExpired(accountState.getCredentialsNonExpired() == 1);*/
+                detail.setAccountNonExpired(true);
+                detail.setAccountNonLocked(true);
+                detail.setEnabled(true);
+                detail.setCredentialsNonExpired(true);
                 //查询用户权限
                 List<GrantedAuthority> authorities = new ArrayList<>();
                 // 从RoleUser表拿到admin用户所有的role角色，他可以是admin超用户，也有普通用户权限

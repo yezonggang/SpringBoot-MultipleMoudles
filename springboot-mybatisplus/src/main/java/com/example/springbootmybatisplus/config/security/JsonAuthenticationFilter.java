@@ -1,6 +1,8 @@
 package com.example.springbootmybatisplus.config.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,12 +21,17 @@ import java.util.Map;
  * @author yzg
  */
 public class JsonAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+    private static final Logger logger = LoggerFactory.getLogger(JsonAuthenticationFilter.class);
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException {
+        final String APPLICATION_JSON_UTF8_VALUE_MY = "application/json;charset=UTF-8";
+
         //判断请求类型是否是json
-        if (request.getContentType().equals(MediaType.APPLICATION_JSON_UTF8_VALUE) || request.getContentType().equals(MediaType.APPLICATION_JSON_VALUE)){
+        logger.info("request.getContentType():"+request.getContentType());
+        if ( request.getContentType().equals(MediaType.APPLICATION_JSON_VALUE)
+                ||request.getContentType().equals(APPLICATION_JSON_UTF8_VALUE_MY)  ){
             ObjectMapper mapper = new ObjectMapper();
             UsernamePasswordAuthenticationToken authenticationToken = null;
             try {
@@ -32,6 +39,7 @@ public class JsonAuthenticationFilter extends UsernamePasswordAuthenticationFilt
                 Map<String,String> authenticationBean = mapper.readValue(is,Map.class);
                 authenticationToken = new UsernamePasswordAuthenticationToken(authenticationBean.get("username"),
                         authenticationBean.get("password"));
+                logger.info("jinqulexsfdfdfsd--------"+authenticationBean);
             }catch (IOException e){
                 e.printStackTrace();
                 authenticationToken = new UsernamePasswordAuthenticationToken("","");
@@ -39,6 +47,8 @@ public class JsonAuthenticationFilter extends UsernamePasswordAuthenticationFilt
             setDetails(request,authenticationToken);
             return this.getAuthenticationManager().authenticate(authenticationToken);
         }else {
+            request.getContentType();
+            logger.info("meijinqu");
             return super.attemptAuthentication(request, response);
         }
 
