@@ -1,0 +1,15 @@
+server:
+  port: 8700
+  tomcat:
+    connection-timeout: 18000000
+spring:
+  datasource:
+    url: jdbc:mysql://39.103.218.1:3306/security?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
+    username: root
+    password: 123456
+    type: com.alibaba.druid.pool.DruidDataSource
+jwt:
+  secret: ffjaksdfjak
+  expiration: 3600000
+  header:  JWTHeaderName
+  refresh_expiration: 651000000
