@@ -64,10 +64,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         userDetails.getPassword(), userDetails.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-            filterChain.doFilter(request,response);
         }else{
             reject(response);
         }
+        filterChain.doFilter(request,response);
     }
 
     private static void reject(HttpServletResponse response) throws IOException{
