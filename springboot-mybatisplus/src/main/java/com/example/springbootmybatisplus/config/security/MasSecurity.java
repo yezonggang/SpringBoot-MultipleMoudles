@@ -21,6 +21,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -63,15 +64,28 @@ public class MasSecurity extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                .successHandler(new MySuccessHandler())//登录成功的处理
-                .failureHandler(new MyFailHandler())//登录失败的处理
-                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);//因为用不到session，所以选择禁用
+                .loginProcessingUrl("/login")
+                .and().addFilterAt(jsonAuthenticationFilter(),UsernamePasswordAuthenticationFilter.class)
+//                .successHandler(new MySuccessHandler())//登录成功的处理
+//                .failureHandler(new MyFailHandler())//登录失败的处理
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);//因为用不到session，所以选择禁用
         //向过滤器链中添加，自定义的jwt过滤器和json过滤器
         //在UsernamePasswordAuthenticationFilter之前添加jwtAuthenticationFilter
-        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         //在UsernamePasswordAuthenticationFilter之后添加jsonAuthenticationFilter
-            .addFilterAt(jsonAuthenticationFilter(),UsernamePasswordAuthenticationFilter.class);
     }
+
+    @Bean
+    JsonAuthenticationFilter jsonAuthenticationFilter() throws Exception {
+        JsonAuthenticationFilter filter = new JsonAuthenticationFilter();
+        filter.setAuthenticationManager(authenticationManagerBean());
+        filter.setFilterProcessesUrl("/login");
+        filter.setAuthenticationSuccessHandler(new MySuccessHandler());
+        filter.setAuthenticationFailureHandler(new MyFailHandler());
+        return filter;
+    }
+
+
 
     //登录成功的处理类
     class MySuccessHandler implements AuthenticationSuccessHandler {
@@ -87,9 +101,10 @@ public class MasSecurity extends WebSecurityConfigurerAdapter {
             String refreshToken = jsonWebTokenUtil.generateRefreshToken(details, roles.get(0).getAuthority());
             token.setToken(refreshToken);
             LambdaQueryWrapper<RefreshTokenEntity> queryWrapper = new QueryWrapper<RefreshTokenEntity>().lambda().eq(RefreshTokenEntity::getUsename, details.getUsername());
-            int countAll = refreshTokenMapper.selectCount(queryWrapper);
-            if (countAll > 0) {
-                if(countAll == 1){
+            List<RefreshTokenEntity> refreshTokenEntityAll=refreshTokenMapper.selectList(queryWrapper);
+            //int countAll = refreshTokenMapper.selectCount(queryWrapper);
+            if (refreshTokenEntityAll!=null) {
+                if(refreshTokenEntityAll.size() == 1){
                     RefreshTokenEntity refreshTokenTemp = refreshTokenMapper.selectOne(queryWrapper);
                     refreshTokenTemp.setToken(refreshToken);
                     refreshTokenMapper.update(refreshTokenTemp, queryWrapper);
@@ -127,12 +142,6 @@ public class MasSecurity extends WebSecurityConfigurerAdapter {
         auth.authenticationProvider(loginAuthProvider);
     }
 
-    @Bean
-    JsonAuthenticationFilter jsonAuthenticationFilter() throws Exception {
-        JsonAuthenticationFilter filter = new JsonAuthenticationFilter();
-        filter.setAuthenticationManager(authenticationManagerBean());
-        return filter;
-    }
 
 }
 

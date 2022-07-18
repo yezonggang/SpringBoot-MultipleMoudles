@@ -3,6 +3,7 @@ package com.example.springbootmybatisplus.config.security;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,6 +21,7 @@ import java.util.Map;
  * 该过滤器实现了从json获取用户名和密码
  * @author yzg
  */
+@Order(-2)
 public class JsonAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private static final Logger logger = LoggerFactory.getLogger(JsonAuthenticationFilter.class);
 

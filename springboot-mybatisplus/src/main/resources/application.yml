@@ -1,5 +1,5 @@
 server:
-  port: 8700
+  port: 8701
   tomcat:
     connection-timeout: 18000000
 spring:
@@ -9,7 +9,11 @@ spring:
     password: 123456
     type: com.alibaba.druid.pool.DruidDataSource
 jwt:
-  secret: ffjaksdfjak
+  used: 1
+  secret: admin
   expiration: 3600000
   header:  JWTHeaderName
   refresh_expiration: 651000000
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
