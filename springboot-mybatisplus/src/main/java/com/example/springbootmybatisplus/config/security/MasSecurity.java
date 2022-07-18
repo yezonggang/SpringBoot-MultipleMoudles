@@ -78,7 +78,7 @@ public class MasSecurity extends WebSecurityConfigurerAdapter {
                 .loginProcessingUrl("/login")
                 .and().addFilterAt(jsonAuthenticationFilter(),UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);//因为用不到session，所以选择禁用
-        http.addFilterAt(jwtAuthenticationFilter(), FilterSecurityInterceptor.class);
+        http.addFilterAfter(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
     }
 
@@ -86,7 +86,6 @@ public class MasSecurity extends WebSecurityConfigurerAdapter {
     public JwtAuthenticationFilter jwtAuthenticationFilter(){
         List<String> uris = new LinkedList<>();
         uris.add("/login");
-        uris.add("/getInfo");
         List<AntPathRequestMatcher> matchers = uris.stream().map(AntPathRequestMatcher::new).collect(Collectors.toList());
         return new JwtAuthenticationFilter(jsonWebTokenUtil, userService,
                 request -> matchers.stream().anyMatch(m -> m.matches(request)));
