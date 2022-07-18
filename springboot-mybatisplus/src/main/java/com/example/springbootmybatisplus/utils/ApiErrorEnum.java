@@ -2,9 +2,9 @@ package com.example.springbootmybatisplus.utils;
 
 public enum ApiErrorEnum {
 
-    CHECK_DATABASE_WRONG("CHECK_DATABASE_WRONG","get data from database wrong","0001");
+    CHECK_DATABASE_WRONG("CHECK_DATABASE_WRONG","get data from database wrong",0001);
 
-    ApiErrorEnum(String errorName,String errorMsg,String errorCode){
+    ApiErrorEnum(String errorName,String errorMsg,int errorCode){
         this.errorName = errorName;
         this.errorMsg = errorMsg;
         this.errorCode = errorCode;
@@ -12,6 +12,6 @@ public enum ApiErrorEnum {
 
     public String errorName;
     public String errorMsg;
-    public String errorCode;
+    public int errorCode;
 
     }

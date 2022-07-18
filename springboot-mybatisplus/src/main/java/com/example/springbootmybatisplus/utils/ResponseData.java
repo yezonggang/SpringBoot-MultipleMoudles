@@ -11,11 +11,11 @@ public class ResponseData implements Serializable {
     private final static String ERROR = "error";
     private final static String WARN = "warn";
 
-    private  String code;
+    private  int code;
     private  String msg ;
     private  Object data;
 
-    public ResponseData(String code, String msg, Object data) {
+    public ResponseData(int code, String msg, Object data) {
         this.code = code;
         this.msg = msg;
         this.data = data;
@@ -27,7 +27,7 @@ public class ResponseData implements Serializable {
     }
 
     public static ResponseData success(Object data){
-        return new ResponseData("200","success",data);
+        return new ResponseData(20000,"success",data);
     }
 
     public static ResponseData fail(ApiError apiError){

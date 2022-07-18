@@ -7,7 +7,11 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.springbootmybatisplus.config.security.JsonWebTokenUtil;
 import com.example.springbootmybatisplus.entity.*;
 import com.example.springbootmybatisplus.mapper.*;
+import com.example.springbootmybatisplus.utils.ApiError;
+import com.example.springbootmybatisplus.utils.ApiErrorEnum;
+import com.example.springbootmybatisplus.utils.ResponseData;
 import com.example.springbootmybatisplus.utils.ResponseMsgUtil;
+import com.example.springbootmybatisplus.vo.LoginInfoVO;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,81 +40,99 @@ import java.util.*;
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, UserEntity> implements UserDetailsService, IService<UserEntity> {
 
-        @Autowired
-        UserMapper userMapper;
-        @Autowired
-        AccountStateMapper accountStateDao;
-        @Autowired
-        RefreshTokenMapper refreshTokenDao;
-        @Autowired
-        JsonWebTokenUtil jwtTokenUtil;
-        @Autowired
-        RoleUserMapper roleUserMapper;
+    @Autowired
+    UserMapper userMapper;
+    @Autowired
+    AccountStateMapper accountStateDao;
+    @Autowired
+    RefreshTokenMapper refreshTokenDao;
+    @Autowired
+    JsonWebTokenUtil jwtTokenUtil;
+    @Autowired
+    RoleUserMapper roleUserMapper;
 
-        @Autowired
-        RoleMapper roleDao;
+    @Autowired
+    RoleMapper roleDao;
 
-    private static final Logger logger =LoggerFactory.getLogger(UserServiceImpl.class);
-        @Override
-        public UserDetails loadUserByUsername(String s){
-            logger.info(String.format("xxxxxx%s",s));
-            LambdaQueryWrapper<UserEntity> queryWrapper = new QueryWrapper<UserEntity>().lambda().eq(UserEntity::getUsername, s);
-            UserEntity user = userMapper.selectOne(queryWrapper);
-            if (user!= null) {
-                SysUserDetailEntity detail = new SysUserDetailEntity();
-                detail.setId(Math.toIntExact(user.getId()));
-                detail.setUsername(user.getUsername());
-                detail.setPassword(user.getPassword());
-                logger.info(String.format("xxxxxxxxxxuser_id,%s",user.getId()));
-                AccountStateEntity accountState = accountStateDao.selectOne(new QueryWrapper<AccountStateEntity>().lambda().eq(AccountStateEntity::getUserid,user.getId()));
+    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+
+    @Override
+    public UserDetails loadUserByUsername(String s) {
+        logger.info(String.format("xxxxxx%s", s));
+        LambdaQueryWrapper<UserEntity> queryWrapper = new QueryWrapper<UserEntity>().lambda().eq(UserEntity::getUsername, s);
+        UserEntity user = userMapper.selectOne(queryWrapper);
+        if (user != null) {
+            SysUserDetailEntity detail = new SysUserDetailEntity();
+            detail.setId(Math.toIntExact(user.getId()));
+            detail.setUsername(user.getUsername());
+            detail.setPassword(user.getPassword());
+            logger.info(String.format("xxxxxxxxxxuser_id,%s", user.getId()));
+            AccountStateEntity accountState = accountStateDao.selectOne(new QueryWrapper<AccountStateEntity>().lambda().eq(AccountStateEntity::getUserid, user.getId()));
 /*                detail.setAccountNonExpired(accountState.getAccountNonExpired() == 1);
                 detail.setAccountNonLocked(accountState.getAccountNonLocked() == 1);
                 detail.setEnabled(accountState.getEnabled() == 1);
                 detail.setCredentialsNonExpired(accountState.getCredentialsNonExpired() == 1);*/
-                detail.setAccountNonExpired(true);
-                detail.setAccountNonLocked(true);
-                detail.setEnabled(true);
-                detail.setCredentialsNonExpired(true);
-                //查询用户权限
-                List<GrantedAuthority> authorities = new ArrayList<>();
-                // 从RoleUser表拿到admin用户所有的role角色，他可以是admin超用户，也有普通用户权限
-                LambdaQueryWrapper<RoleUserEntity> roleUserEntityQueryWrapper = new QueryWrapper<RoleUserEntity>().lambda().eq(RoleUserEntity::getUserId, user.getId());
-                List<RoleUserEntity> roleUserEntities = roleUserMapper.selectList(roleUserEntityQueryWrapper);
-                for(RoleUserEntity roleUserEntity:roleUserEntities){
-                    RoleEntity roleTemp = roleDao.selectOne(new QueryWrapper<RoleEntity>().lambda().eq(RoleEntity::getId, roleUserEntity.getRoleId()));
-                    SimpleGrantedAuthority authority = new SimpleGrantedAuthority(roleTemp.getCode());
-                    authorities.add(authority);
-                }
-                detail.setAuthorities(authorities);
-                return detail;
-            } else
-                throw new UsernameNotFoundException("该账号不存在");
-        }
+            detail.setAccountNonExpired(true);
+            detail.setAccountNonLocked(true);
+            detail.setEnabled(true);
+            detail.setCredentialsNonExpired(true);
+            //查询用户权限
+            List<GrantedAuthority> authorities = new ArrayList<>();
+            // 从RoleUser表拿到admin用户所有的role角色，他可以是admin超用户，也有普通用户权限
+            LambdaQueryWrapper<RoleUserEntity> roleUserEntityQueryWrapper = new QueryWrapper<RoleUserEntity>().lambda().eq(RoleUserEntity::getUserId, user.getId());
+            List<RoleUserEntity> roleUserEntities = roleUserMapper.selectList(roleUserEntityQueryWrapper);
+            for (RoleUserEntity roleUserEntity : roleUserEntities) {
+                RoleEntity roleTemp = roleDao.selectOne(new QueryWrapper<RoleEntity>().lambda().eq(RoleEntity::getId, roleUserEntity.getRoleId()));
+                SimpleGrantedAuthority authority = new SimpleGrantedAuthority(roleTemp.getCode());
+                authorities.add(authority);
+            }
+            detail.setAuthorities(authorities);
+            return detail;
+        } else
+            throw new UsernameNotFoundException("该账号不存在");
+    }
 
-        public void checkLogin (HttpServletRequest request, HttpServletResponse response) throws IOException {
-            String token = request.getHeader(jwtTokenUtil.getHeader());
-            if (StringUtils.hasLength(token) && !token.equals("null")) {
-                //根据username加载权限
-                String username = jwtTokenUtil.getUsernameIgnoreExpiration(token);
-                if (username != null && SecurityContextHolder.getContext().getAuthentication() != null) {
-                    UserDetails userDetails = loadUserByUsername(username);
-                    if (jwtTokenUtil.validateToken(token, userDetails)) {
-                        ResponseMsgUtil.sendSuccessMsg("已登录", null, response);
-                    } else {
-                        //如果jwt过期，则获取refresh_token，判断refresh_token是否过期，不过期则刷新token返回前端
-                        String refreshToken = refreshTokenDao.selectOne(new QueryWrapper<RefreshTokenEntity>().lambda().eq(RefreshTokenEntity::getUsename, username)).getToken();
-                        if (jwtTokenUtil.validateToken(refreshToken, userDetails)) {
-                            ResponseMsgUtil.sendSuccessMsg("刷新jwt", jwtTokenUtil.refreshToken(token), response);
-                        } else {
-                            ResponseMsgUtil.sendFailMsg("登录状态过期请重新登录", response);
+    public ResponseData loginInfo(HttpServletRequest request) {
+        String token = request.getHeader(jwtTokenUtil.getHeader());
+        LoginInfoVO loginInfoVO = new LoginInfoVO();
+        if (StringUtils.hasLength(token) && !token.equals("null")) {
+            //根据username加载权限
+            String username = jwtTokenUtil.getUsernameIgnoreExpiration(token);
+            loginInfoVO.setName(username);
+            loginInfoVO.setIntroductions("descritions");
+            loginInfoVO.setAvatar("testAvatar");
+            if (username != null && SecurityContextHolder.getContext().getAuthentication() != null) {
+                UserDetails userDetails = loadUserByUsername(username);
+                if (jwtTokenUtil.validateToken(token, userDetails)) {
+                    LambdaQueryWrapper<RoleEntity> queryWrapper = new QueryWrapper<RoleEntity>().lambda().eq(RoleEntity::getName, username);
+                    List<RoleEntity> roleEntities = roleDao.selectList(queryWrapper);
+                    List<String> roleList = new ArrayList<>();
+                    for (RoleEntity roleEntity : roleEntities) {
+                        roleList.add(roleEntity.getName());
+                    }
+                    loginInfoVO.setRoles(roleList);
+                    return ResponseData.success(loginInfoVO);
+                } else {
+                    //如果jwt过期，则获取refresh_token，判断refresh_token是否过期，不过期则刷新token返回前端
+                    String refreshToken = refreshTokenDao.selectOne(new QueryWrapper<RefreshTokenEntity>().lambda().eq(RefreshTokenEntity::getUsename, username)).getToken();
+                    if (jwtTokenUtil.validateToken(refreshToken, userDetails)) {
+                        LambdaQueryWrapper<RoleEntity> queryWrapper = new QueryWrapper<RoleEntity>().lambda().eq(RoleEntity::getName, username);
+                        List<RoleEntity> roleEntities = roleDao.selectList(queryWrapper);
+                        List<String> roleList = new ArrayList<>();
+                        for (RoleEntity roleEntity : roleEntities) {
+                            roleList.add(roleEntity.getName());
                         }
+                        loginInfoVO.setRoles(roleList);
+                        return ResponseData.success(loginInfoVO);
+                    } else {
+                        return ResponseData.fail(ApiError.from(ApiErrorEnum.CHECK_DATABASE_WRONG));
                     }
                 }
-            } else {
-                ResponseMsgUtil.sendFailMsg("请您登录后再进行操作", response);
             }
-
         }
+        return ResponseData.fail(ApiError.from(ApiErrorEnum.CHECK_DATABASE_WRONG));
+    }
+
 /*
 
         public void getMenu (String username, HttpServletRequest request, HttpServletResponse response) throws
@@ -167,47 +189,41 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserEntity> impleme
         }
 */
 
-        /**
-         * 获取角色列表
-         * @param page 页码
-         * @param size 每页数量
-         * @param request 请求
-         * @param response 响应
-         */
-        public void getRoleList ( int page, int size, HttpServletRequest request, HttpServletResponse response){
+    /**
+     * 获取角色列表
+     *
+     * @param page     页码
+     * @param size     每页数量
+     * @param request  请求
+     * @param response 响应
+     */
+    public void getRoleList(int page, int size, HttpServletRequest request, HttpServletResponse response) {
 /*
             PageRequest pageRequest = PageRequest.of((page - 1), size);
 */
-            try {
-                ResponseMsgUtil.sendSuccessMsg("ok", roleDao.findAll(), response);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        try {
+            ResponseMsgUtil.sendSuccessMsg("ok", roleDao.findAll(), response);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+    }
 
-        /**
-         * 刷新令牌
-         */
-        public void refreshToken (HttpServletRequest request, HttpServletResponse response){
-            String token = request.getHeader(jwtTokenUtil.getHeader());
-            if (StringUtils.hasLength(token) && !token.equals("null")) {
-                String username = jwtTokenUtil.getUsernameIgnoreExpiration(token);
-                //如果jwt过期，则获取refresh_token，判断refresh_token是否过期，不过期则刷新token返回前端
-                String refreshToken = refreshTokenDao.getRefreshToken(username);
-                UserDetails userDetails = loadUserByUsername(username);
-                if (jwtTokenUtil.validateToken(refreshToken, userDetails)) {
-                    try {
-                        String newToken = jwtTokenUtil.refreshToken(token);
-                        ResponseMsgUtil.sendSuccessMsg("刷新jwt", newToken, response);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    try {
-                        ResponseMsgUtil.sendFailMsg("登录状态过期请重新登录", response);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+    /**
+     * 刷新令牌
+     */
+    public void refreshToken(HttpServletRequest request, HttpServletResponse response) {
+        String token = request.getHeader(jwtTokenUtil.getHeader());
+        if (StringUtils.hasLength(token) && !token.equals("null")) {
+            String username = jwtTokenUtil.getUsernameIgnoreExpiration(token);
+            //如果jwt过期，则获取refresh_token，判断refresh_token是否过期，不过期则刷新token返回前端
+            String refreshToken = refreshTokenDao.getRefreshToken(username);
+            UserDetails userDetails = loadUserByUsername(username);
+            if (jwtTokenUtil.validateToken(refreshToken, userDetails)) {
+                try {
+                    String newToken = jwtTokenUtil.refreshToken(token);
+                    ResponseMsgUtil.sendSuccessMsg("刷新jwt", newToken, response);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             } else {
                 try {
@@ -216,7 +232,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserEntity> impleme
                     e.printStackTrace();
                 }
             }
+        } else {
+            try {
+                ResponseMsgUtil.sendFailMsg("登录状态过期请重新登录", response);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
+
+
+}
 
 

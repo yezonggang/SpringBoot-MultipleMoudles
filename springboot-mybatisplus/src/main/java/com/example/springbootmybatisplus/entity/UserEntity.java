@@ -34,6 +34,8 @@ public class UserEntity implements Serializable {
     private String username;
 
     private String password;
+    private String avatar;
+    private String des;
 
 
 }
