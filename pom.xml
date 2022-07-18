@@ -205,5 +205,6 @@
         <module>springboot-nacos</module>
         <module>springcloud-gateway</module>
         <module>springcloud-login</module>
+        <module>springboot-common</module>
     </modules>
 </project>
