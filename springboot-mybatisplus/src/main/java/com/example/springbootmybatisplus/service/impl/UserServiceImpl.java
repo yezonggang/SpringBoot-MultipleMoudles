@@ -93,44 +93,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserEntity> impleme
     }
 
     public ResponseData loginInfo(HttpServletRequest request) {
+        // 因为所有url都被过滤，所以这里只需要拿到role就行，不需要考虑token是否过期问题
         String token = request.getHeader(jwtTokenUtil.getHeader());
         LoginInfoVO loginInfoVO = new LoginInfoVO();
-        if (StringUtils.hasLength(token) && !token.equals("null")) {
-            //根据username加载权限
+        if(StringUtils.hasLength(token) && !token.equals("null")) {
             String username = jwtTokenUtil.getUsernameIgnoreExpiration(token);
-            loginInfoVO.setName(username);
-            loginInfoVO.setIntroductions("descritions");
-            loginInfoVO.setAvatar("testAvatar");
-            if (username != null && SecurityContextHolder.getContext().getAuthentication() != null) {
-                UserDetails userDetails = loadUserByUsername(username);
-                if (jwtTokenUtil.validateToken(token, userDetails)) {
-                    LambdaQueryWrapper<RoleEntity> queryWrapper = new QueryWrapper<RoleEntity>().lambda().eq(RoleEntity::getName, username);
-                    List<RoleEntity> roleEntities = roleDao.selectList(queryWrapper);
-                    List<String> roleList = new ArrayList<>();
-                    for (RoleEntity roleEntity : roleEntities) {
-                        roleList.add(roleEntity.getName());
-                    }
-                    loginInfoVO.setRoles(roleList);
-                    return ResponseData.success(loginInfoVO);
-                } else {
-                    //如果jwt过期，则获取refresh_token，判断refresh_token是否过期，不过期则刷新token返回前端
-                    String refreshToken = refreshTokenDao.selectOne(new QueryWrapper<RefreshTokenEntity>().lambda().eq(RefreshTokenEntity::getUsename, username)).getToken();
-                    if (jwtTokenUtil.validateToken(refreshToken, userDetails)) {
-                        LambdaQueryWrapper<RoleEntity> queryWrapper = new QueryWrapper<RoleEntity>().lambda().eq(RoleEntity::getName, username);
-                        List<RoleEntity> roleEntities = roleDao.selectList(queryWrapper);
-                        List<String> roleList = new ArrayList<>();
-                        for (RoleEntity roleEntity : roleEntities) {
-                            roleList.add(roleEntity.getName());
-                        }
-                        loginInfoVO.setRoles(roleList);
-                        return ResponseData.success(loginInfoVO);
-                    } else {
-                        return ResponseData.fail(ApiError.from(ApiErrorEnum.CHECK_DATABASE_WRONG));
-                    }
-                }
+            LambdaQueryWrapper<RoleEntity> queryWrapper = new QueryWrapper<RoleEntity>().lambda().eq(RoleEntity::getName, username);
+            List<RoleEntity> roleEntities = roleDao.selectList(queryWrapper);
+            List<String> roleList = new ArrayList<>();
+            for (RoleEntity roleEntity : roleEntities) {
+                roleList.add(roleEntity.getName());
             }
+            loginInfoVO.setRoles(roleList);
+            return ResponseData.success(loginInfoVO);
         }
-        return ResponseData.fail(ApiError.from(ApiErrorEnum.CHECK_DATABASE_WRONG));
+        return ResponseData.fail(ApiError.from(ApiErrorEnum.TOKEN_EXPIRED));
     }
 
 /*

@@ -88,7 +88,7 @@ public class MasSecurity extends WebSecurityConfigurerAdapter {
         uris.add("/login");
         List<AntPathRequestMatcher> matchers = uris.stream().map(AntPathRequestMatcher::new).collect(Collectors.toList());
         return new JwtAuthenticationFilter(jsonWebTokenUtil, userService,
-                request -> matchers.stream().anyMatch(m -> m.matches(request)));
+                request -> matchers.stream().anyMatch(m -> m.matches(request)),refreshTokenMapper);
     }
 
 

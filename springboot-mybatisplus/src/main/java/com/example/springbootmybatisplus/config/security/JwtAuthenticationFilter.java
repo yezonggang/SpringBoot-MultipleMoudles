@@ -1,6 +1,10 @@
 package com.example.springbootmybatisplus.config.security;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.example.springbootmybatisplus.entity.RefreshTokenEntity;
+import com.example.springbootmybatisplus.mapper.RefreshTokenMapper;
 import com.example.springbootmybatisplus.service.impl.UserServiceImpl;
 import com.example.springbootmybatisplus.utils.ApiError;
 import com.example.springbootmybatisplus.utils.ApiErrorEnum;
@@ -39,11 +43,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private JsonWebTokenUtil tokenUtil;
     private UserServiceImpl userServiceImpl;
     private RequestMatcher requestMatcher;
+    private RefreshTokenMapper refreshTokenMapper;
 
-    public JwtAuthenticationFilter(JsonWebTokenUtil tokenUtil, UserServiceImpl userServiceImpl, RequestMatcher requestMatcher) {
+    public JwtAuthenticationFilter(JsonWebTokenUtil tokenUtil, UserServiceImpl userServiceImpl, RequestMatcher requestMatcher,RefreshTokenMapper refreshTokenMapper) {
         this.tokenUtil = tokenUtil;
         this.userServiceImpl = userServiceImpl;
         this.requestMatcher = requestMatcher;
+        this.refreshTokenMapper = refreshTokenMapper;
     }
 
     @Override
@@ -51,18 +57,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         //从请求头部获取json web token
         String jwt = request.getHeader(tokenUtil.getHeader());
+
         if (StringUtils.hasLength(jwt)&&!jwt.equals("null")&&!jwt.equals("undefined")) {
-            //从jwt中获取用户名
+            //从jwt中获取用户名,这里应该考虑过期时间，超过过期时间的话获取不到username
+            //TODO
             String username = tokenUtil.getUsernameFromToken(jwt);
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-
-                logger.info("xxxxxxxxxxx"+username);
-                //通过用户名查询
-                UserDetails userDetails = userServiceImpl.loadUserByUsername(username);
-                //创建认证信息
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username,
-                        userDetails.getPassword(), userDetails.getAuthorities());
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                LambdaQueryWrapper<RefreshTokenEntity> queryWrapper = new QueryWrapper<RefreshTokenEntity>().lambda().eq(RefreshTokenEntity::getUsename, username);
+                RefreshTokenEntity refreshTokenEntity = refreshTokenMapper.selectOne(queryWrapper);
+                String tokenInMysql = StringUtils.isEmpty(refreshTokenEntity) ? "null" : refreshTokenEntity.getToken();
+                if(jwt.equals(tokenInMysql)){
+                    logger.info("JwtAuthenticationFilter,username:"+username);
+                    //通过用户名查询
+                    UserDetails userDetails = userServiceImpl.loadUserByUsername(username);
+                    //创建认证信息
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username,
+                            userDetails.getPassword(), userDetails.getAuthorities());
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
             }
         }else{
             reject(response);
@@ -73,8 +85,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static void reject(HttpServletResponse response) throws IOException{
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("status", true);
-        jsonObject.put("code",20000);
-        jsonObject.put("data","have no token");
+        jsonObject.put("code",50014);
+        jsonObject.put("data","Token expired, please log in again.");
         PrintWriter out = response.getWriter();
         out.write(new ObjectMapper().writeValueAsString(jsonObject));
         out.flush();

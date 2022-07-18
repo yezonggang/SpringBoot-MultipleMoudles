@@ -21,7 +21,6 @@ import java.util.Map;
  * 该过滤器实现了从json获取用户名和密码
  * @author yzg
  */
-@Order(-2)
 public class JsonAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private static final Logger logger = LoggerFactory.getLogger(JsonAuthenticationFilter.class);
 
@@ -41,7 +40,6 @@ public class JsonAuthenticationFilter extends UsernamePasswordAuthenticationFilt
                 Map<String,String> authenticationBean = mapper.readValue(is,Map.class);
                 authenticationToken = new UsernamePasswordAuthenticationToken(authenticationBean.get("username"),
                         authenticationBean.get("password"));
-                logger.info("jinqulexsfdfdfsd--------"+authenticationBean);
             }catch (IOException e){
                 e.printStackTrace();
                 authenticationToken = new UsernamePasswordAuthenticationToken("","");
@@ -50,7 +48,6 @@ public class JsonAuthenticationFilter extends UsernamePasswordAuthenticationFilt
             return this.getAuthenticationManager().authenticate(authenticationToken);
         }else {
             request.getContentType();
-            logger.info("meijinqu");
             return super.attemptAuthentication(request, response);
         }
 

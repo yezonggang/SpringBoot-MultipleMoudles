@@ -14,7 +14,7 @@ public class InterfaceAccessException implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
-        ResponseMsgUtil.sendSuccessMsg("token past",null,httpServletResponse);
+        ResponseMsgUtil.sendSuccessMsg("error occured.",null,httpServletResponse);
     }
 
     public boolean isAjaxRequest(HttpServletRequest request) {
