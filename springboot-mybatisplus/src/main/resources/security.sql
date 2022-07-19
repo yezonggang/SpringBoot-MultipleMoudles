@@ -29,6 +29,7 @@ CREATE TABLE if not  exists `role_user` (
   `user_id` bigint(11) NOT NULL,
   `role_id` bigint(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+TRUNCATE TABLE role_user;
 INSERT INTO `role_user` VALUES (1, 1);
 INSERT INTO `role_user` VALUES (1, 2);
 INSERT INTO `role_user` VALUES (2, 2);
