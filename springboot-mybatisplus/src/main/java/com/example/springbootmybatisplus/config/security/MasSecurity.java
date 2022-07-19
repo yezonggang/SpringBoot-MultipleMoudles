@@ -7,6 +7,7 @@ import com.example.springbootmybatisplus.entity.RefreshTokenEntity;
 import com.example.springbootmybatisplus.mapper.RefreshTokenMapper;
 import com.example.springbootmybatisplus.service.IRefreshTokenService;
 import com.example.springbootmybatisplus.service.impl.UserServiceImpl;
+import com.example.springbootmybatisplus.utils.JsonWebTokenUtil;
 import com.example.springbootmybatisplus.utils.ResponseData;
 import com.example.springbootmybatisplus.utils.ResponseMsgUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,12 +31,10 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;

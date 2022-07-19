@@ -1,9 +1,9 @@
-package com.example.springbootmybatisplus.config.security;
+package com.example.springbootmybatisplus.utils;
+import com.example.springbootmybatisplus.config.security.JsonWebTokenProperty;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.checkerframework.checker.units.qual.A;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

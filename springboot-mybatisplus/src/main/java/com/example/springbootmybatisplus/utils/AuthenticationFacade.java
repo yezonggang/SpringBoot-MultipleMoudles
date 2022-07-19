@@ -1,6 +1,6 @@
 package com.example.springbootmybatisplus.utils;
 
-import com.example.springbootmybatisplus.utils.IAuthenticationFacade;
+import com.example.springbootmybatisplus.config.security.IAuthenticationFacade;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;

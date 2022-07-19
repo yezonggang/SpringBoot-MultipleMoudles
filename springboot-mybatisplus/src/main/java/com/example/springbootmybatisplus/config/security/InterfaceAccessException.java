@@ -1,5 +1,8 @@
 package com.example.springbootmybatisplus.config.security;
 
+import com.example.springbootmybatisplus.utils.ApiError;
+import com.example.springbootmybatisplus.utils.ApiErrorEnum;
+import com.example.springbootmybatisplus.utils.ResponseData;
 import com.example.springbootmybatisplus.utils.ResponseMsgUtil;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -14,7 +17,7 @@ public class InterfaceAccessException implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
-        ResponseMsgUtil.sendSuccessMsg("error occured.",null,httpServletResponse);
+        ResponseData.fail(ApiError.from(ApiErrorEnum.INTERFACE_ACCESS_EXCEPTION));
     }
 
     public boolean isAjaxRequest(HttpServletRequest request) {
