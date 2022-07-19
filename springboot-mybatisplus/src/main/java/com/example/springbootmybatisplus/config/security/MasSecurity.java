@@ -26,6 +26,7 @@ import org.springframework.security.web.access.intercept.FilterSecurityIntercept
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.util.StringUtils;
 
@@ -63,6 +64,10 @@ public class MasSecurity extends WebSecurityConfigurerAdapter {
     @Autowired
     UserServiceImpl userService;
 
+    @Autowired
+    JsonWebTokenProperty jsonWebTokenProperty;
+
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         //允许跨域，配置后SpringSecurity会自动寻找name=corsConfigurationSource的Bean
@@ -74,10 +79,10 @@ public class MasSecurity extends WebSecurityConfigurerAdapter {
                 .antMatchers("/login","/refreshToken","/user/getInfo","swagger-ui.html").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .formLogin()
-                .loginProcessingUrl("/login")
+                .formLogin().loginProcessingUrl("/login")
                 .and().addFilterAt(jsonAuthenticationFilter(),UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);//因为用不到session，所以选择禁用
+        http.logout().logoutUrl("/logout").logoutSuccessHandler(logoutSuccessHandler()).deleteCookies(jsonWebTokenProperty.getHeader()).clearAuthentication(true);
         http.addFilterAfter(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
     }
@@ -104,6 +109,27 @@ public class MasSecurity extends WebSecurityConfigurerAdapter {
     }
 
 
+
+    @Bean
+    public LogoutSuccessHandler logoutSuccessHandler(){
+        return new LogoutSuccessHandler() {
+            @Autowired
+            public void setObjectMapper(ObjectMapper objectMapper) {
+                this.objectMapper = objectMapper;
+            }
+
+            private ObjectMapper objectMapper;
+
+            @Override
+            public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+                response.setContentType("application/json;charset=utf-8");
+                PrintWriter out = response.getWriter();
+                out.write(objectMapper.writeValueAsString(ResponseData.success("logout success.")));
+                out.flush();
+                out.close();
+            }
+        };
+    }
 
     //登录成功的处理类
     class MySuccessHandler implements AuthenticationSuccessHandler {

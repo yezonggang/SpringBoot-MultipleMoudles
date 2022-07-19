@@ -36,7 +36,7 @@ public class UserController {
 
 
     @GetMapping("/getInfo")
-    public ResponseData loginInfo(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public ResponseData loginInfo(HttpServletRequest request) throws IOException {
         logger.info("begin to llogger login_info");
         return userService.loginInfo(request);
     }
@@ -55,9 +55,11 @@ public class UserController {
 */
 
 
+/*
     @PostMapping("/refreshToken")
     public void refreshToken(HttpServletRequest request,HttpServletResponse response){
         userService.refreshToken(request,response);
     }
+*/
 
 }
