@@ -57,7 +57,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         //从请求头部获取json web token
         String jwt = request.getHeader(tokenUtil.getHeader());
-
         if (StringUtils.hasLength(jwt)&&!jwt.equals("null")&&!jwt.equals("undefined")) {
             //从jwt中获取用户名,这里应该考虑过期时间，超过过期时间的话获取不到username
             //TODO

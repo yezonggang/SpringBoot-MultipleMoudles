@@ -1,5 +1,6 @@
 package com.example.springbootmybatisplus.config.security;
-import com.alibaba.fastjson.JSONObject;
+
+
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.springbootmybatisplus.entity.RefreshTokenEntity;
@@ -22,13 +23,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.util.StringUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -44,6 +43,7 @@ import java.util.stream.Collectors;
 
 /**
  * spring security 配置类
+ *
  * @author yzg
  */
 @EnableWebSecurity
@@ -67,6 +67,11 @@ public class MasSecurity extends WebSecurityConfigurerAdapter {
     @Autowired
     JsonWebTokenProperty jsonWebTokenProperty;
 
+    // 先认证后鉴权
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(loginAuthProvider);
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -76,11 +81,11 @@ public class MasSecurity extends WebSecurityConfigurerAdapter {
         //当访问接口失败的配置
         http.exceptionHandling().authenticationEntryPoint(new InterfaceAccessException());
         http.authorizeRequests()
-                .antMatchers("/login","/refreshToken","/user/getInfo","swagger-ui.html").permitAll()
+                .antMatchers("/login", "/refreshToken", "/user/getInfo", "swagger-ui.html").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().loginProcessingUrl("/login")
-                .and().addFilterAt(jsonAuthenticationFilter(),UsernamePasswordAuthenticationFilter.class)
+                .and().addFilterAt(jsonAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);//因为用不到session，所以选择禁用
         http.logout().logoutUrl("/logout").logoutSuccessHandler(logoutSuccessHandler()).deleteCookies(jsonWebTokenProperty.getHeader()).clearAuthentication(true);
         http.addFilterAfter(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
@@ -88,14 +93,13 @@ public class MasSecurity extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter(){
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
         List<String> uris = new LinkedList<>();
         uris.add("/login");
         List<AntPathRequestMatcher> matchers = uris.stream().map(AntPathRequestMatcher::new).collect(Collectors.toList());
         return new JwtAuthenticationFilter(jsonWebTokenUtil, userService,
-                request -> matchers.stream().anyMatch(m -> m.matches(request)),refreshTokenMapper);
+                request -> matchers.stream().anyMatch(m -> m.matches(request)), refreshTokenMapper);
     }
-
 
 
     @Bean
@@ -109,9 +113,8 @@ public class MasSecurity extends WebSecurityConfigurerAdapter {
     }
 
 
-
     @Bean
-    public LogoutSuccessHandler logoutSuccessHandler(){
+    public LogoutSuccessHandler logoutSuccessHandler() {
         return new LogoutSuccessHandler() {
             @Autowired
             public void setObjectMapper(ObjectMapper objectMapper) {
@@ -128,6 +131,15 @@ public class MasSecurity extends WebSecurityConfigurerAdapter {
                 out.flush();
                 out.close();
             }
+
+/*          // 这种写法更简洁
+            @Override
+            public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+                response.setContentType("application/json;charset=utf-8");
+                PrintWriter out = response.getWriter();
+                out.write(new ObjectMapper().writeValueAsString(ResponseData.success("logout success.")));
+                out.flush();
+                out.close();*/
         };
     }
 
@@ -139,41 +151,33 @@ public class MasSecurity extends WebSecurityConfigurerAdapter {
             UserDetails details = (UserDetails) authentication.getPrincipal();
             List<GrantedAuthority> roles = (List<GrantedAuthority>) details.getAuthorities();
             //登录时同时生成refreshToken，保存到表中
-            logger.info("beginnnnnnnnnnnnn");
+            logger.info("begin to onAuthenticationSuccess.");
             RefreshTokenEntity token = new RefreshTokenEntity();
             token.setUsename(details.getUsername());
             String refreshToken = jsonWebTokenUtil.generateRefreshToken(details, roles.get(0).getAuthority());
             token.setToken(refreshToken);
             LambdaQueryWrapper<RefreshTokenEntity> queryWrapper = new QueryWrapper<RefreshTokenEntity>().lambda().eq(RefreshTokenEntity::getUsename, details.getUsername());
-            List<RefreshTokenEntity> refreshTokenEntityAll=refreshTokenMapper.selectList(queryWrapper);
-            //int countAll = refreshTokenMapper.selectCount(queryWrapper);
-            if (refreshTokenEntityAll!=null && refreshTokenEntityAll.size()>0) {
-                if(refreshTokenEntityAll.size() == 1){
-                    RefreshTokenEntity refreshTokenTemp = refreshTokenMapper.selectOne(queryWrapper);
-                    refreshTokenTemp.setToken(refreshToken);
-                    refreshTokenMapper.update(refreshTokenTemp, queryWrapper);
-                }else{
-                    List<RefreshTokenEntity> refreshTokenList = refreshTokenMapper.selectList(queryWrapper);
-                    for(RefreshTokenEntity var:refreshTokenList){
-                        var.setToken(refreshToken);
-                    }
-                    refreshTokenService.saveOrUpdateBatch(refreshTokenList);
-                }
+            RefreshTokenEntity refreshTokenTemp = refreshTokenMapper.selectOne(queryWrapper);
+            if (refreshTokenTemp != null) {
+                refreshTokenTemp.setToken(refreshToken);
+                refreshTokenMapper.update(refreshTokenTemp, queryWrapper);
             } else {
                 logger.info("begin to insert token");
                 refreshTokenMapper.insert(token);
                 logger.info("end to insert token");
             }
             response.setHeader(jsonWebTokenUtil.getHeader(), refreshToken);
-/*            Cookie cookie = new Cookie("token", refreshToken);
+/*          Cookie cookie = new Cookie("token", refreshToken);
             cookie.setPath("/");
-            response.addCookie(cookie);*/
+            response.addCookie(cookie)
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("status", true);
             jsonObject.put("code",20000);
             jsonObject.put("data",refreshToken);
-            PrintWriter out = response.getWriter();
             out.write(new ObjectMapper().writeValueAsString(jsonObject));
+            ;*/
+            PrintWriter out = response.getWriter();
+            out.write(new ObjectMapper().writeValueAsString(ResponseData.success(refreshToken)));
             out.flush();
             out.close();
             ResponseData.success(response);
@@ -187,16 +191,8 @@ public class MasSecurity extends WebSecurityConfigurerAdapter {
         @Override
         public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
                                             AuthenticationException e) throws IOException, ServletException {
-            ResponseMsgUtil.sendFailMsg(e.getMessage(),response);
+            ResponseMsgUtil.sendFailMsg(e.getMessage(), response);
         }
-    }
-
-
-
-    // 先认证后鉴权
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(loginAuthProvider);
     }
 
 

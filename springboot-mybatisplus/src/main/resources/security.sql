@@ -82,6 +82,6 @@ CREATE TABLE if not  exists `refresh_token` (
   `id` bigint(11) NOT NULL AUTO_INCREMENT,
   `usename` varchar(255) DEFAULT NULL,
   `token` varchar(255) DEFAULT NULL,
-    PRIMARY KEY (`id`)
+   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
  
