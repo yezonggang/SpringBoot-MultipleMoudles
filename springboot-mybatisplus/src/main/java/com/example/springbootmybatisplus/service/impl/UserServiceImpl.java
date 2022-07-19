@@ -98,6 +98,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserEntity> impleme
         LoginInfoVO loginInfoVO = new LoginInfoVO();
         if(StringUtils.hasLength(token) && !token.equals("null")) {
             String username = jwtTokenUtil.getUsernameIgnoreExpiration(token);
+            loginInfoVO.setName(username);
             LambdaQueryWrapper<RoleEntity> queryWrapper = new QueryWrapper<RoleEntity>().lambda().eq(RoleEntity::getName, username);
             List<RoleEntity> roleEntities = roleDao.selectList(queryWrapper);
             List<String> roleList = new ArrayList<>();

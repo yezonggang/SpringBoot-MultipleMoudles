@@ -41,11 +41,6 @@ public class UserController {
         return userService.loginInfo(request);
     }
 
-    @GetMapping("/test")
-    public ResponseData test(HttpServletRequest httpServletRequest) {
-        return ResponseData.success("xxxtest-success");
-    }
-
 
 /*
     @PostMapping("/user/check_login")

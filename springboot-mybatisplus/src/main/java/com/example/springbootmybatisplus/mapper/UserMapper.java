@@ -3,6 +3,7 @@ package com.example.springbootmybatisplus.mapper;
 import com.example.springbootmybatisplus.entity.UserEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Component;
 
 /**
  * <p>
@@ -13,6 +14,7 @@ import org.apache.ibatis.annotations.Mapper;
  * @since 2022-07-17
  */
 @Mapper
+@Component
 public interface UserMapper extends BaseMapper<UserEntity> {
 
 }
