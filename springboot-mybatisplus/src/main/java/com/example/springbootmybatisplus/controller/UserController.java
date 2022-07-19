@@ -1,19 +1,17 @@
 package com.example.springbootmybatisplus.controller;
 
 import com.example.springbootmybatisplus.service.impl.UserServiceImpl;
-import com.example.springbootmybatisplus.utils.AuthenticationFacade;
+import com.example.springbootmybatisplus.config.security.AuthenticationFacade;
 import com.example.springbootmybatisplus.utils.ResponseData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**

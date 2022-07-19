@@ -1,4 +1,4 @@
-package com.example.springbootmybatisplus.utils;
+package com.example.springbootmybatisplus.config.security;
 
 import com.example.springbootmybatisplus.config.security.IAuthenticationFacade;
 import org.springframework.security.core.Authentication;
