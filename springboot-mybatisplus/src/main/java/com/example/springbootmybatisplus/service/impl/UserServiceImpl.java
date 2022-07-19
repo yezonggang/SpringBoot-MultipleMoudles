@@ -2,6 +2,9 @@ package com.example.springbootmybatisplus.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.metadata.OrderItem;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.springbootmybatisplus.utils.JsonWebTokenUtil;
@@ -54,6 +57,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserEntity> impleme
     RoleMapper roleDao;
 
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+
+    public IPage<UserEntity> testPage(String userName){
+        Page<UserEntity> page = new Page<UserEntity>(1,10);
+        OrderItem orderItem = new OrderItem(userName, true);
+        page.addOrder(orderItem);
+        return userMapper.selectPageVo(page);
+    }
+
+
 
     @Override
     public UserDetails loadUserByUsername(String s) {
