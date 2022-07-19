@@ -3,7 +3,6 @@ use security;
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
- 
 
 CREATE TABLE if not  exists `user` (
   `id` bigint(11) NOT NULL AUTO_INCREMENT,
@@ -13,13 +12,8 @@ CREATE TABLE if not  exists `user` (
   `des` varchar(255),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
- 
-
-
-INSERT INTO `user` VALUES (2, 'editor', '$2a$10$JJ82/k3LicFc6kbCYP7ekO4MyepyQCL7w4vX1cgPzgy91nC2sALhi');
-INSERT INTO `user` VALUES (1, 'admin', '$2a$10$JJ82/k3LicFc6kbCYP7ekO4MyepyQCL7w4vX1cgPzgy91nC2sALhi');
-
-
+INSERT INTO `user` VALUES (2, 'editor', '$2a$10$JJ82/k3LicFc6kbCYP7ekO4MyepyQCL7w4vX1cgPzgy91nC2sALhi','testavatar','admin');
+INSERT INTO `user` VALUES (1, 'admin', '$2a$10$JJ82/k3LicFc6kbCYP7ekO4MyepyQCL7w4vX1cgPzgy91nC2sALhi','testavatar','editor');
 
 CREATE TABLE if not  exists `role` (
                         `id` bigint(11) NOT NULL AUTO_INCREMENT,
@@ -28,26 +22,17 @@ CREATE TABLE if not  exists `role` (
                         `des` varchar(255),
                         PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
-
-
 INSERT INTO `role` VALUES (2, 'editor','test','editor');
 INSERT INTO `role` VALUES (1, 'admin','test','admin');
-
-
 
 CREATE TABLE if not  exists `role_user` (
   `user_id` bigint(11) NOT NULL,
   `role_id` bigint(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
- 
-
-
 INSERT INTO `role_user` VALUES (1, 1);
 INSERT INTO `role_user` VALUES (1, 2);
 INSERT INTO `role_user` VALUES (2, 2);
 
-
- 
 CREATE TABLE if not  exists `permission` (
   `id` bigint(11) NOT NULL AUTO_INCREMENT,
   `url` varchar(255) NOT NULL,
@@ -56,13 +41,8 @@ CREATE TABLE if not  exists `permission` (
   `pid` bigint(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
- 
-
-
 INSERT INTO `permission` VALUES (1, 'user/**', '用户列表', NULL, 0);
 INSERT INTO `permission` VALUES (2, '/admin/**', '获取用户信息', NULL, 0);
-
- 
 
 CREATE TABLE if not  exists `account_state` (
   `id` bigint(11) NOT NULL AUTO_INCREMENT,
@@ -73,10 +53,7 @@ CREATE TABLE if not  exists `account_state` (
   `enabled` int NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-INSERT INTO `account_state` VALUES (1,'1', 'admin', 1,1,1,1);
-
- 
+INSERT INTO `account_state` VALUES (1,'1',1,1,1,1);
 
 CREATE TABLE if not  exists `refresh_token` (
   `id` bigint(11) NOT NULL AUTO_INCREMENT,
@@ -84,4 +61,3 @@ CREATE TABLE if not  exists `refresh_token` (
   `token` varchar(255) DEFAULT NULL,
    PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
- 
