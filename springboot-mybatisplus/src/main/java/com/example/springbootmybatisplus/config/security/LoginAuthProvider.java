@@ -26,7 +26,7 @@ public class LoginAuthProvider implements AuthenticationProvider {
         //获取用户名和密码
         String username = auth.getName();
         String password = (String) auth.getCredentials();
-        logger.info("xxxxxxxxxxxxx"+username);
+        logger.info("LoginAuthProvider,xxxxxxxxxxxxx"+username);
         UserDetails userDetail  = userServiceImpl.loadUserByUsername(username);
         if (!userDetail.isEnabled()){
             throw new DisabledException("该账号已禁用，请联系管理员");
