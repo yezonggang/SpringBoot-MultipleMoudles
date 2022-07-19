@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -29,6 +30,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -80,14 +82,14 @@ public class MasSecurity extends WebSecurityConfigurerAdapter {
         //当访问接口失败的配置
         http.exceptionHandling().authenticationEntryPoint(new InterfaceAccessException());
         http.authorizeRequests()
-                .antMatchers("/login", "/refreshToken", "/user/getInfo", "swagger-ui.html").permitAll()
+                .antMatchers("/","/login", "/swagger-ui.html","/swagger-resources/**","/webjars/**","/v2/**","/api/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().loginProcessingUrl("/login")
                 .and().addFilterAt(jsonAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);//因为用不到session，所以选择禁用
         http.logout().logoutUrl("/logout").logoutSuccessHandler(logoutSuccessHandler()).deleteCookies(jsonWebTokenProperty.getHeader()).clearAuthentication(true);
-        http.addFilterAfter(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterAt(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
     }
 
@@ -95,9 +97,14 @@ public class MasSecurity extends WebSecurityConfigurerAdapter {
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
         List<String> uris = new LinkedList<>();
         uris.add("/login");
-        List<AntPathRequestMatcher> matchers = uris.stream().map(AntPathRequestMatcher::new).collect(Collectors.toList());
-        return new JwtAuthenticationFilter(jsonWebTokenUtil, userService,
-                request -> matchers.stream().anyMatch(m -> m.matches(request)), refreshTokenMapper);
+        uris.add("/swagger-resources");
+        uris.add("/webjars/");
+        uris.add("/v2/");
+        uris.add("/api/");
+        uris.add("/swagger-ui.html");
+        uris.add("/swagger-resources/configuration/ui");
+        //List<AntPathRequestMatcher> matchers = uris.stream().map(AntPathRequestMatcher::new).collect(Collectors.toList());
+        return new JwtAuthenticationFilter(jsonWebTokenUtil, userService,uris, refreshTokenMapper);
     }
 
 
