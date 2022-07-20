@@ -17,7 +17,7 @@ public class InterfaceAccessException implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
-        ResponseData.fail(ApiError.from(ApiErrorEnum.INTERFACE_ACCESS_EXCEPTION));
+        ResponseData.fail(ApiError.from(ApiErrorEnum.ACCESS_EXCEPTION));
     }
 
     public boolean isAjaxRequest(HttpServletRequest request) {

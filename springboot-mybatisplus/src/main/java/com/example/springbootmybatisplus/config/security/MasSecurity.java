@@ -89,22 +89,26 @@ public class MasSecurity extends WebSecurityConfigurerAdapter {
                 .and().addFilterAt(jsonAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);//因为用不到session，所以选择禁用
         http.logout().logoutUrl("/logout").logoutSuccessHandler(logoutSuccessHandler()).deleteCookies(jsonWebTokenProperty.getHeader()).clearAuthentication(true);
-        http.addFilterAt(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterAfter(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
+    }
+
+    @Bean(name="myRequestMatcher")
+    public  SkipPathAntMatcher skipPathAntMatcher(){
+        List<String> uris = new LinkedList<>();
+        uris.add("/login");
+        uris.add("/swagger-resources/**");
+        uris.add("/webjars/**");
+        uris.add("/v2/**");
+        uris.add("/api/**");
+        uris.add("/swagger-ui.html");
+        uris.add("/swagger-resources/configuration/ui");
+        return new SkipPathAntMatcher(uris);
     }
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        List<String> uris = new LinkedList<>();
-        uris.add("/login");
-        uris.add("/swagger-resources");
-        uris.add("/webjars/");
-        uris.add("/v2/");
-        uris.add("/api/");
-        uris.add("/swagger-ui.html");
-        uris.add("/swagger-resources/configuration/ui");
-        //List<AntPathRequestMatcher> matchers = uris.stream().map(AntPathRequestMatcher::new).collect(Collectors.toList());
-        return new JwtAuthenticationFilter(jsonWebTokenUtil, userService,uris, refreshTokenMapper);
+        return new JwtAuthenticationFilter(jsonWebTokenUtil, userService,skipPathAntMatcher(), refreshTokenMapper);
     }
 
 

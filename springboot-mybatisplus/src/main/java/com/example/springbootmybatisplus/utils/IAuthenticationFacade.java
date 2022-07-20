@@ -1,4 +1,4 @@
-package com.example.springbootmybatisplus.config.security;
+package com.example.springbootmybatisplus.utils;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;

@@ -1,11 +1,7 @@
 package com.example.springbootmybatisplus.controller;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.metadata.OrderItem;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.example.springbootmybatisplus.entity.UserEntity;
 import com.example.springbootmybatisplus.service.impl.UserServiceImpl;
-import com.example.springbootmybatisplus.config.security.AuthenticationFacade;
+import com.example.springbootmybatisplus.utils.AuthenticationFacade;
 import com.example.springbootmybatisplus.utils.ResponseData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.util.List;
 
 /**
  * <p>

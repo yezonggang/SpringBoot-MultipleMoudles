@@ -38,17 +38,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private JsonWebTokenUtil tokenUtil;
     private UserServiceImpl userServiceImpl;
-    //private RequestMatcher requestMatcher;
-    private List<String> requestMatcher;
+    private RequestMatcher requestMatcher;
+    //private List<String> requestMatcher;
     private RefreshTokenMapper refreshTokenMapper;
 
-    public JwtAuthenticationFilter(JsonWebTokenUtil tokenUtil, UserServiceImpl userServiceImpl, List<String> requestMatcher,RefreshTokenMapper refreshTokenMapper) {
+    public JwtAuthenticationFilter(JsonWebTokenUtil tokenUtil, UserServiceImpl userServiceImpl, RequestMatcher requestMatcher,RefreshTokenMapper refreshTokenMapper) {
         this.tokenUtil = tokenUtil;
         this.userServiceImpl = userServiceImpl;
         this.requestMatcher = requestMatcher;
         this.refreshTokenMapper = refreshTokenMapper;
     }
 
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        logger.info(String.format("请求路径-->%s,是否应该被过滤掉-->%s",request.getRequestURL(),requestMatcher.matches(request)));
+        return requestMatcher.matches(request);
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -56,10 +61,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         //从请求头部获取json web token
         String jwt = request.getHeader(tokenUtil.getHeader());
         logger.info("urls:"+request.getRequestURI()+"XXXXXX"+request.getRequestURI().substring(0,request.getRequestURL().indexOf("/")));
-        if(requestMatcher.contains(request.getRequestURI().substring(0,request.getRequestURL().indexOf("/")))){
-            logger.info(request.getRequestURI()+"no need to filter ");
-            filterChain.doFilter(request,response);
-        }else {
             if (StringUtils.hasLength(jwt) && !jwt.equals("null") && !jwt.equals("undefined")) {
                 //从jwt中获取用户名,这里应该考虑过期时间，超过过期时间的话获取不到username
                 //TODO
@@ -83,7 +84,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 //logger.info(requestMatcher.toString());
                 reject(request, response);
             }
-        }
+
     }
 
     private static void reject(HttpServletRequest request,HttpServletResponse response) throws IOException{
