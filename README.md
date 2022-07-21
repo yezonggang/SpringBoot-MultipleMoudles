@@ -19,18 +19,8 @@ Ctrl + /   //双斜杠注释
 Ctrl + Shift + /   代码段注释
 Ctrl + Shift + u   带小写转换
 
---------------------h2数据库建表
 
-create table STUDENT
-(
-    ID      INT auto_increment,
-    AGE     INT,
-    GENDER  VARCHAR,
-    CLASSES VARCHAR,
-    NAME    VARCHAR,
-    constraint STUDENT_PK
-        primary key (ID)
-);
+https://github.com/aofeng/threadpool4j/blob/master/doc/guide/02-guide.md
 
 
 
