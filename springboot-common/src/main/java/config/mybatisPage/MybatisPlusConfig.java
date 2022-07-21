@@ -1,4 +1,4 @@
-package com.example.springbootmybatisplus.config.mybatisPage;
+package config.mybatisPage;
 
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import org.springframework.context.annotation.Bean;

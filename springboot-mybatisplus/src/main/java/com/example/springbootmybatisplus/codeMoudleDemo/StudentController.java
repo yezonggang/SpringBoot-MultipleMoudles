@@ -1,7 +1,7 @@
 //package com.example.springbootmybatisplus.codeMoudleDemo;
 //
 //
-//import com.example.springbootmybatisplus.utils.ResponseData;
+//import com.example.springbootmybatisplus.response.ResponseData;
 //import io.swagger.annotations.Api;
 //import org.junit.Test;
 //import org.springframework.beans.factory.annotation.Autowired;

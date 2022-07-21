@@ -1,15 +1,11 @@
 package com.example.springbootmybatisplus.config.security;
 
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.springbootmybatisplus.entity.RefreshTokenEntity;
 import com.example.springbootmybatisplus.mapper.RefreshTokenMapper;
 import com.example.springbootmybatisplus.service.impl.UserServiceImpl;
-import com.example.springbootmybatisplus.utils.ApiError;
-import com.example.springbootmybatisplus.utils.ApiErrorEnum;
 import com.example.springbootmybatisplus.utils.JsonWebTokenUtil;
-import com.example.springbootmybatisplus.utils.ResponseData;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,15 +15,16 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+import execption.ApiError;
+import execption.ApiErrorEnum;
+import response.ResponseData;
 
 import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
 
 /**
  * 登录成功后，对此类进行鉴权

@@ -1,4 +1,4 @@
-package com.example.springbootmybatisplus.config;
+package config.swagger;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;

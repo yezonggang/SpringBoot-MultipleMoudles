@@ -1,4 +1,4 @@
-package com.example.springbootmybatisplus.utils;
+package response;
 
 import com.alibaba.fastjson.JSON;
 

@@ -2,10 +2,9 @@ package com.example.springbootmybatisplus.service;
 
 import com.example.springbootmybatisplus.entity.UserEntity;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.example.springbootmybatisplus.utils.ResponseData;
+import response.ResponseData;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * <p>

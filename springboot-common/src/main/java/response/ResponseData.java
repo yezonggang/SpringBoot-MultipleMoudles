@@ -1,7 +1,7 @@
-package com.example.springbootmybatisplus.utils;
+package response;
 
+import execption.ApiError;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 

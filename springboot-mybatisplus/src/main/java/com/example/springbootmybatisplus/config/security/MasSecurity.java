@@ -8,8 +8,6 @@ import com.example.springbootmybatisplus.mapper.RefreshTokenMapper;
 import com.example.springbootmybatisplus.service.IRefreshTokenService;
 import com.example.springbootmybatisplus.service.impl.UserServiceImpl;
 import com.example.springbootmybatisplus.utils.JsonWebTokenUtil;
-import com.example.springbootmybatisplus.utils.ResponseData;
-import com.example.springbootmybatisplus.utils.ResponseMsgUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -29,8 +26,8 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import response.ResponseData;
+import response.ResponseMsgUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -39,7 +36,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 /**
@@ -102,7 +98,6 @@ public class MasSecurity extends WebSecurityConfigurerAdapter {
         uris.add("/v2/**");
         uris.add("/api/**");
         uris.add("/swagger-ui.html");
-        uris.add("/swagger-resources/configuration/ui");
         return new SkipPathAntMatcher(uris);
     }
 

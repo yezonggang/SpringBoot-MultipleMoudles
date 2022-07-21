@@ -1,11 +1,10 @@
 package com.example.springbootmybatisplus.config.security;
 
-import com.example.springbootmybatisplus.utils.ApiError;
-import com.example.springbootmybatisplus.utils.ApiErrorEnum;
-import com.example.springbootmybatisplus.utils.ResponseData;
-import com.example.springbootmybatisplus.utils.ResponseMsgUtil;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import execption.ApiError;
+import execption.ApiErrorEnum;
+import response.ResponseData;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

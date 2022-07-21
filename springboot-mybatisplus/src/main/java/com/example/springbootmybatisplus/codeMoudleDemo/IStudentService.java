@@ -1,12 +1,11 @@
 package com.example.springbootmybatisplus.codeMoudleDemo;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.example.springbootmybatisplus.utils.ApiError;
-import com.example.springbootmybatisplus.utils.Either;
+import execption.ApiError;
+import response.Either;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-
 /**
  * <p>
  *  服务类

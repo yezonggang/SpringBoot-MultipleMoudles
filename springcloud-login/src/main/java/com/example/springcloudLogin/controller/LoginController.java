@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import springfox.documentation.annotations.ApiIgnore;
 import utils.OAuth2Utils;
-import utils.ResponseData;
+import response.ResponseData;
 
 import java.security.Principal;
 import java.util.Map;
