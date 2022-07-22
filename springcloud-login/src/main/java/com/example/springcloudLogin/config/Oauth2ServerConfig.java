@@ -43,18 +43,18 @@ public class Oauth2ServerConfig extends AuthorizationServerConfigurerAdapter {
          *简单使用，存放在内存中
          * @param clientsDetails
          * @throws Exception
-         *//*
+         */
         clients.inMemory()
                 .withClient("client-app")
-                .secret("123")
+                .secret("123456")
                 .scopes("all")
-                .authorizedGrantTypes("password", "refresh_token")
+                .authorizedGrantTypes("password")
                 .accessTokenValiditySeconds(3600)
-                .refreshTokenValiditySeconds(86400);*/
+                .refreshTokenValiditySeconds(86400);
         /**
          * 授权用户存放在数据库中
          */
-        clients.withClientDetails(clientDetailsService);
+        /*clients.withClientDetails(clientDetailsService);*/
     }
 
     @Override

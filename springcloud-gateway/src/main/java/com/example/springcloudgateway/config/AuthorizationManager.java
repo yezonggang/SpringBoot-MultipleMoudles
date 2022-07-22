@@ -2,6 +2,7 @@ package com.example.springcloudgateway.config;
 
 
 import com.example.springcloudgateway.common.AuthConstants;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.http.HttpMethod;
@@ -12,6 +13,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.server.authorization.AuthorizationContext;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
+import org.springframework.util.PathMatcher;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
@@ -23,12 +26,15 @@ import java.util.List;
  */
 @Component
 @Slf4j
+@AllArgsConstructor
 public class AuthorizationManager implements ReactiveAuthorizationManager<AuthorizationContext> {
+    private WhiteListConfig whiteListConfig;
 
     @Override
     public Mono<AuthorizationDecision> check(Mono<Authentication> mono, AuthorizationContext authorizationContext) {
         ServerHttpRequest request = authorizationContext.getExchange().getRequest();
         String path = request.getURI().getPath();
+        PathMatcher pathMatcher = new AntPathMatcher();
 
         // 1. 对应跨域的预检请求直接放行
         if (request.getMethod() == HttpMethod.OPTIONS) {
@@ -41,10 +47,18 @@ public class AuthorizationManager implements ReactiveAuthorizationManager<Author
             return Mono.just(new AuthorizationDecision(false));
         }
 
+        //3. 白名单路径直接放行
+        List<String> whiteList = whiteListConfig.getUrls();
+        for (String ignoreUrl : whiteList) {
+            if (pathMatcher.match(ignoreUrl, path)) {
+                return Mono.just(new AuthorizationDecision(true));
+            }
+        }
+
         //TODO:从Redis中获取当前路径可访问角色列表
         List<String> authorities = new ArrayList<>();
         //查询表
-
+        authorities.add("1");
         //认证通过且角色匹配的用户可访问当前路径
         return mono
                 .filter(Authentication::isAuthenticated)

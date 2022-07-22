@@ -1,10 +1,12 @@
 package com.example.springcloudLogin.vo;
 
+import com.example.springcloudLogin.dto.UserDTO;
 import lombok.Data;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.List;
 
 @Data
 public class SecurityUser implements UserDetails {
@@ -34,6 +36,12 @@ public class SecurityUser implements UserDetails {
 
     }
 
+    public SecurityUser(UserDTO userDTO) {
+        this.id=userDTO.getId();
+        this.username=userDTO.getName();
+        this.password=userDTO.getPassword();
+        this.enabled=true;
+    }
     @Override
     public boolean isAccountNonExpired() {
         return true;
