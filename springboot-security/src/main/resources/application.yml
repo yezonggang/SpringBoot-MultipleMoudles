@@ -1,0 +1,36 @@
+server:
+  port: 8701
+  tomcat:
+    connection-timeout: 18000000
+spring:
+  datasource:
+    enable: true
+    url: jdbc:mysql://39.103.218.1:3306/security?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+#    entity-package: com.example.security.entity
+#    mapper-location: classpath:mapper/*.xml
+#h2:
+#  datasource:
+#    enable: false
+#    url: jdbc:h2:~/yzg
+#    username: root
+#    password: 123456
+#    driver-class-name: org.h2.Driver
+#    type: com.alibaba.druid.pool.DruidDataSource
+#    web-allow-others: true
+#    entity-package: com.example.security.entity
+#    mapper-location: classpath:mapper/*.xml
+jwt:
+  used: 1
+  secret: admin
+  expiration: 3600000
+  header:  JWTHeaderName
+  refresh_expiration: 651000000
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+swagger:
+  enable: true

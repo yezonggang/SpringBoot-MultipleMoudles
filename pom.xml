@@ -200,7 +200,7 @@
     </build>
     <modules>
         <module>springboot-demo</module>
-        <module>springboot-mybatisplus</module>
+        <module>springboot-security</module>
         <module>juc</module>
         <module>springboot-nacos</module>
         <module>springcloud-gateway</module>
