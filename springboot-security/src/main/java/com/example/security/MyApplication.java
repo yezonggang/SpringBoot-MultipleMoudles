@@ -12,10 +12,10 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @SpringBootApplication()
 @MapperScan("com.example.security.mapper")
 @EnableFeignClients
-public class SpringbootMybatisplusApplication {
+public class MyApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(SpringbootMybatisplusApplication.class, args);
+        SpringApplication.run(MyApplication.class, args);
     }
 
 

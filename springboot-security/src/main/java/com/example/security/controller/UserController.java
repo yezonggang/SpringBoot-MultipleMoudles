@@ -39,11 +39,13 @@ public class UserController {
         return userService.loginInfo(request);
     }
 
+/*
     @GetMapping("/testPage")
     public ResponseData testPage(@RequestParam(value = "orderby") String userName) {
         logger.info("begin to test page"+userName);
         return ResponseData.success(userService.testPage(userName));
     }
+*/
 
 /*
     @PostMapping("/user/check_login")

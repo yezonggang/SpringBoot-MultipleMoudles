@@ -1,52 +1,134 @@
 package utils;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Json Util
- *
- * @author wuare
- * @date 2021/6/16
+ * @Author wulongbo
+ * @Date 2020/7/6 15:43
+ * @Version 1.0
  */
 public class JsonUtil {
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final Logger log = LoggerFactory.getLogger(JsonUtil.class);
 
-    private JsonUtil() {
+
+    /**
+     * byte数组转换成Json
+     *
+     * @param array
+     * @return JSONObject
+     */
+    public static JSONObject byteToJson(byte[] array) {
+        String body = JSONArray.toJSONString(array); // 先转换成Json String
+        byte[] json = JSONObject.parseObject(body, byte[].class);//转json byte
+        String convent = new String(json); // byte数组转换成String
+        JSONObject jsonObject = JSONObject.parseObject(convent);
+        return jsonObject;
     }
 
     /**
-     * json to bean
+     * byte数组转换成Java bean
+     *
+     * @param array
+     * @return JSONObject
      */
-    public static <T> T toBean(String content, Class<T> valueType) {
-        try {
-            return objectMapper.readValue(content, valueType);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+    public static <T> T byteToJaveBean(byte[] array, Class<T> clazz) throws InstantiationException, IllegalAccessException {
+        JSONObject jsonObject = byteToJson(array);
+        T obj = clazz.newInstance();
+        return jsonObject.toJavaObject((Type) obj.getClass());
     }
 
     /**
-     * json to bean
+     * String转换成Json
+     *
+     * @param key
+     * @return JSONObject
      */
-    public static <T> T toBean(String content, TypeReference<T> typeReference) {
-        try {
-            return objectMapper.readValue(content, typeReference);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+    public static JSONObject stringToJson(String key) {
+        return JSONObject.parseObject(key);
     }
 
     /**
-     * object to json
+     * Java对象转换成String
+     *
+     * @return
      */
-    public static <T> String toJson(T value) {
-        try {
-            return objectMapper.writeValueAsString(value);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+    public static String objectToString(Object object) {
+        return JSONArray.toJSONString(object);
     }
+
+    /**
+     * Java bean 转换成 JSONObject
+     *
+     * @return
+     */
+    public static JSONObject beanToJSONObject(Object object) {
+        return JSONObject.parseObject(JSONObject.toJSON(object).toString());
+    }
+
+    /**
+     * 将map转换成byte[]
+     *
+     * @return
+     */
+    public static byte[] changeMapToByte(Map<String, Object> map) {
+
+        byte[] bytes = null;
+        try {
+            bytes = serilizableForMap(map).getBytes();
+        } catch (Exception e) {
+            log.error("map到byte[]转换异样", e);
+        }
+        return bytes;
+    }
+
+    /**
+     * 将byte[]转换成map
+     *
+     * @return
+     */
+    public static Map<String, String> changeByteToMap(byte[] bytes) {
+
+        Map<String, String> retmap = null;
+
+        try {
+            if (bytes != null) {
+                retmap = deserilizableForMapFromFile(new String(bytes), String.class);
+            } else {
+                log.error("changeByteToMap中bytes为null");
+            }
+
+        } catch (Exception e) {
+            log.error("byte到map转换异样", e);
+        }
+
+        return retmap;
+    }
+
+    /* 将HashMap序列化为字符串存入json文件中 */
+    public static String serilizableForMap(Object objMap)
+            throws IOException {
+        String listString = JSON.toJSONString(objMap, true);// (maps,CityEntity.class);
+        return listString;
+    }
+
+    /* 将json文件中的内容读取进去，反序列化为HashMap */
+    public static <T, K> HashMap<K, T> deserilizableForMapFromFile(String listString2, Class<T> clazz) throws IOException {
+
+        Map<K, T> map = JSON.parseObject(listString2, new TypeReference<Map<K, T>>() {
+        });
+
+        return (HashMap<K, T>) map;
+    }
+
 }
