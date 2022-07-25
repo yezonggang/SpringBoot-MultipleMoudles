@@ -34,3 +34,14 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 swagger:
   enable: true
+
+feign:
+  httpclient:
+    enabled: true
+  okhttp:
+    enabled: true
+  compression:
+    request:
+      enabled: true
+    response:
+      enabled: true
