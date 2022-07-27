@@ -4,6 +4,7 @@ import constant.SecurityConstants;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -28,16 +29,20 @@ public class OAuth2Utils {
      */
     @SneakyThrows
     public static String getOAuth2ClientId() {
-        String basicPlainText=null;
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        // 从请求路径中获取
+        String clientId = request.getParameter(SecurityConstants.ADMIN_CLIENT_ID);
+        if (!ObjectUtils.isEmpty(clientId)) {
+            return clientId;
+        }
 
         // 从请求头获取
         String basic = request.getHeader(SecurityConstants.AUTHORIZATION_KEY);
         if (StringUtils.isNotBlank(basic) && basic.startsWith(SecurityConstants.BASIC_PREFIX)) {
             basic = basic.split(SecurityConstants.BASIC_PREFIX)[1].trim();
-            basicPlainText = new String(Base64.getDecoder().decode(basic.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
+            clientId = new String(Base64.getDecoder().decode(basic.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
         }
-        return basicPlainText;
+        return clientId;
     }
 
     /**
