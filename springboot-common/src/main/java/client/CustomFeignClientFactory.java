@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Component
 @AutoConfigureAfter(OkHttpFeignConfiguration.class)
-public class MyFeignClientFactory {
+public class CustomFeignClientFactory {
     private static final Contract CONTRACT = new SpringMvcContract();
     private static final Request.Options OPTIONS = new Request.Options(8
             , TimeUnit.SECONDS

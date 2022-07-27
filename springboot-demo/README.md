@@ -1,5 +1,4 @@
 # springboot-demo
-# springboot-parent
 
 Ctrl + Shift + u   大小写字母转换
 
@@ -37,13 +36,35 @@ Ctrl + Shift + /   代码段注释
 
 Ctrl + Shift + u   带小写转换
 
----线程池工程
-https://github.com/aofeng/threadpool4j/blob/master/doc/guide/02-guide.md
-
---- 插件
+------------------------------------------------ 插件
 Maven Helper
 mybaits
 Alibaba Java Coding Guidelines
+
+
+------------------------ juc线程池工程
+
+https://github.com/aofeng/threadpool4j/blob/master/doc/guide/02-guide.md
+
+b站小灰灰的并发编程（代码已在工程）：https://www.bilibili.com/video/BV1B7411L7tE
+
+狂神说java代码：https://gitee.com/kuangstudy
+
+狂神说b站教程：https://www.bilibili.com/video/BV17E411N7KN
+
+
+------------------------ security工程参考
+
+vue：https://github.com/FengQingZhang/sz-vue
+
+java：https://github.com/FengQingZhang/sz-java
+
+------------------------ oauth2参考
+
+gitee地址：https://gitee.com/sunym1993/datauoauthqq_bean
+
+------------------------ 其他参考
+
 
 
 
