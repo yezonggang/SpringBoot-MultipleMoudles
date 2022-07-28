@@ -1,68 +1,78 @@
 package com.example.springcloudgateway.config;
 
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import com.example.springcloudgateway.exception.RequestAccessDeniedHandler;
+import com.example.springcloudgateway.exception.RequestAuthenticationEntryPoint;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.convert.converter.Converter;
-import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.authentication.ReactiveAuthenticationManager;
+import org.springframework.security.authorization.ReactiveAuthorizationManager;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
-import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
-import org.springframework.security.oauth2.server.resource.authentication.ReactiveJwtAuthenticationConverterAdapter;
+import org.springframework.security.oauth2.server.resource.web.server.ServerBearerTokenAuthenticationConverter;
 import org.springframework.security.web.server.SecurityWebFilterChain;
-import reactor.core.publisher.Mono;
+import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
+import org.springframework.security.web.server.authorization.AuthorizationContext;
 
-/**
- * 资源服务器配置
- */
-@AllArgsConstructor
 @Configuration
-// 注解需要使用@EnableWebFluxSecurity而非@EnableWebSecurity,因为SpringCloud Gateway基于WebFlux
 @EnableWebFluxSecurity
-@Slf4j
 public class ResourceServerConfig {
 
-    private AuthorizationManager authorizationManager;
-    private CustomServerAccessDeniedHandler customServerAccessDeniedHandler;
-    private CustomServerAuthenticationEntryPoint customServerAuthenticationEntryPoint;
-    private WhiteListConfig whiteListConfig;
-    
-    @Bean
-    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
-        http.oauth2ResourceServer().jwt()
-                .jwtAuthenticationConverter(jwtAuthenticationConverter());
-        // 自定义处理JWT请求头过期或签名错误的结果
-        http.oauth2ResourceServer().authenticationEntryPoint(customServerAuthenticationEntryPoint);
-        http.authorizeExchange()
-                .pathMatchers(whiteListConfig.getUrls().stream().toArray(String[]::new)).permitAll()
-                .anyExchange().access(authorizationManager)
-                .and()
-                .exceptionHandling()
-                .accessDeniedHandler(customServerAccessDeniedHandler) // 处理未授权
-                .authenticationEntryPoint(customServerAuthenticationEntryPoint) //处理未认证
-                .and().csrf().disable();
-
-        return http.build();
-    }
+    /**
+     * JWT的鉴权管理器
+     */
+    @Autowired
+    private ReactiveAuthorizationManager<AuthorizationContext> accessManager;
 
     /**
-     * @linkhttps://blog.csdn.net/qq_24230139/article/details/105091273
-     * ServerHttpSecurity没有将jwt中authorities的负载部分当做Authentication
-     * 需要把jwt的Claim中的authorities加入
-     * 方案：重新定义ReactiveAuthenticationManager权限管理器，默认转换器JwtGrantedAuthoritiesConverter
+     * token过期的异常处理
      */
-    @Bean
-    public Converter<Jwt, ? extends Mono<? extends AbstractAuthenticationToken>> jwtAuthenticationConverter() {
-        JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-        jwtGrantedAuthoritiesConverter.setAuthorityPrefix("");
-        jwtGrantedAuthoritiesConverter.setAuthoritiesClaimName("scope");
+    @Autowired
+    private RequestAuthenticationEntryPoint requestAuthenticationEntryPoint;
 
-        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
-        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
-        return new ReactiveJwtAuthenticationConverterAdapter(jwtAuthenticationConverter);
+    /**
+     * 权限不足的异常处理
+     */
+    @Autowired
+    private RequestAccessDeniedHandler requestAccessDeniedHandler;
+
+    /**
+     * 系统参数配置
+     */
+    @Autowired
+    private WhiteListConfig whiteListConfig;
+
+    /**
+     * token校验管理器
+     */
+    @Autowired
+    private ReactiveAuthenticationManager tokenAuthenticationManager;
+
+
+    @Bean
+    SecurityWebFilterChain webFluxSecurityFilterChain(ServerHttpSecurity http) throws Exception {
+        //认证过滤器，放入认证管理器tokenAuthenticationManager
+        AuthenticationWebFilter authenticationWebFilter = new AuthenticationWebFilter(tokenAuthenticationManager);
+        authenticationWebFilter.setServerAuthenticationConverter(new ServerBearerTokenAuthenticationConverter());
+
+        http
+                .httpBasic().disable()
+                .csrf().disable()
+                .authorizeExchange()
+                //白名单直接放行
+                .pathMatchers(whiteListConfig.getUrls().stream().toArray(String[]::new)).permitAll()
+                //其他的请求必须鉴权，使用鉴权管理器
+                .anyExchange().access(accessManager)
+                //鉴权的异常处理，权限不足，token失效
+                .and().exceptionHandling()
+                .authenticationEntryPoint(requestAuthenticationEntryPoint)
+                .accessDeniedHandler(requestAccessDeniedHandler)
+                .and()
+                // 跨域过滤器
+                //.addFilterAt(corsFilter, SecurityWebFiltersOrder.CORS)
+                //token的认证过滤器，用于校验token和认证
+                .addFilterAt(authenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION);
+        return http.build();
     }
-    
 }

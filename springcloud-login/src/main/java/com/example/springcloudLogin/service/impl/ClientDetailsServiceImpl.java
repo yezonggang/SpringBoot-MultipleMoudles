@@ -1,7 +1,7 @@
 package com.example.springcloudLogin.service.impl;
 
 import com.example.springcloudLogin.entity.OauthClientEntity;
-import com.example.springcloudLogin.service.OauthClientService;
+import com.example.springcloudLogin.mapper.OauthClientMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -18,11 +18,11 @@ import org.springframework.util.ObjectUtils;
 @RequiredArgsConstructor
 public class ClientDetailsServiceImpl implements ClientDetailsService {
     @Autowired
-    private OauthClientService oauthClientService;
+    private OauthClientMapper oauthClientMapper;
     @Override
     public ClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {
         try {
-            OauthClientEntity oauthClient = oauthClientService.getById(clientId);
+            OauthClientEntity oauthClient = oauthClientMapper.selectById(clientId);
             Assert.isTrue(oauthClient != null, "OAuth2 客户端不存在");
             if (!ObjectUtils.isEmpty(oauthClient)) {
                 BaseClientDetails clientDetails = new BaseClientDetails(

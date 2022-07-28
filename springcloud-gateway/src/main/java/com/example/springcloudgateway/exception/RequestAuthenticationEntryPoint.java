@@ -1,4 +1,4 @@
-package com.example.springcloudgateway.config;
+package com.example.springcloudgateway.exception;
 
 import com.alibaba.druid.support.json.JSONUtils;
 import org.springframework.core.io.buffer.DataBuffer;
@@ -15,21 +15,17 @@ import reactor.core.publisher.Mono;
 import java.nio.charset.Charset;
 
 /**
- * 无效token/token过期 自定义响应
+ * 用于处理没有登录或token过期时的自定义返回结果
  */
 @Component
-public class CustomServerAuthenticationEntryPoint implements ServerAuthenticationEntryPoint {
-
+public class RequestAuthenticationEntryPoint implements ServerAuthenticationEntryPoint {
     @Override
     public Mono<Void> commence(ServerWebExchange exchange, AuthenticationException e) {
         ServerHttpResponse response = exchange.getResponse();
         response.setStatusCode(HttpStatus.OK);
-        response.getHeaders().set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
-        response.getHeaders().set("Access-Control-Allow-Origin", "*");
-        response.getHeaders().set("Cache-Control", "no-cache");
+        response.getHeaders().add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         String body = JSONUtils.toJSONString("user_access_unauthenticated");
-        DataBuffer buffer = response.bufferFactory().wrap(body.getBytes(Charset.forName("UTF-8")));
+        DataBuffer buffer =  response.bufferFactory().wrap(body.getBytes(Charset.forName("UTF-8")));
         return response.writeWith(Mono.just(buffer));
     }
-
 }
