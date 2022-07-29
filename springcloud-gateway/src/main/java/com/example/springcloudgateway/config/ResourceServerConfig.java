@@ -5,15 +5,12 @@ import com.example.springcloudgateway.exception.RequestAuthenticationEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.ReactiveAuthenticationManager;
-import org.springframework.security.authorization.ReactiveAuthorizationManager;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.oauth2.server.resource.web.server.ServerBearerTokenAuthenticationConverter;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
-import org.springframework.security.web.server.authorization.AuthorizationContext;
 
 @Configuration
 @EnableWebFluxSecurity
@@ -23,7 +20,7 @@ public class ResourceServerConfig {
      * JWT的鉴权管理器
      */
     @Autowired
-    private ReactiveAuthorizationManager<AuthorizationContext> accessManager;
+    private AuthorizationManager accessManager;
 
     /**
      * token过期的异常处理
@@ -47,7 +44,7 @@ public class ResourceServerConfig {
      * token校验管理器
      */
     @Autowired
-    private ReactiveAuthenticationManager tokenAuthenticationManager;
+    private JwtAuthenticationManager tokenAuthenticationManager;
 
 
     @Bean
@@ -65,9 +62,10 @@ public class ResourceServerConfig {
                 //其他的请求必须鉴权，使用鉴权管理器
                 .anyExchange().access(accessManager)
                 //鉴权的异常处理，权限不足，token失效
-                .and().exceptionHandling()
+/*                .and()
+                .exceptionHandling()
                 .authenticationEntryPoint(requestAuthenticationEntryPoint)
-                .accessDeniedHandler(requestAccessDeniedHandler)
+                .accessDeniedHandler(requestAccessDeniedHandler)*/
                 .and()
                 // 跨域过滤器
                 //.addFilterAt(corsFilter, SecurityWebFiltersOrder.CORS)

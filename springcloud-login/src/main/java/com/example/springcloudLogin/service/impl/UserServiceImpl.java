@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserDetailsService {
         String password = passwordEncoder.encode("123456");
         //String password = "123456";
         userList = new ArrayList<>();
-        userList.add(new UserDTO(1L,"macro", password,1, Collections.singletonList("ADMIN")));
+        userList.add(new UserDTO(1L,"macro", password,1, Collections.singletonList("/login/logout")));
         userList.add(new UserDTO(2L,"andy", password,1, Collections.singletonList("TEST")));
 
         List<UserDTO> findUserList = userList.stream().filter(item -> item.getName().equals(username)).collect(Collectors.toList());
