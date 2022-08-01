@@ -1,7 +1,7 @@
 package com.example.springcloudgateway.config;
 
 
-import com.example.springcloudgateway.common.AuthConstants;
+import constant.SecurityConstants;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
@@ -22,7 +22,6 @@ import java.util.List;
 
 /**
  * 鉴权管理器，用于判断是否有资源的访问权限
- * Created by macro on 2020/6/19.
  */
 @Component
 @Slf4j
@@ -42,8 +41,8 @@ public class AuthorizationManager implements ReactiveAuthorizationManager<Author
         }
 
         // 2. token为空拒绝访问
-        String token = request.getHeaders().getFirst(AuthConstants.JWT_TOKEN_HEADER);
-        if (ObjectUtils.isNotEmpty(token)) {
+        String token = request.getHeaders().getFirst(SecurityConstants.AUTHORIZATION_KEY);
+        if (!ObjectUtils.isNotEmpty(token)) {
             return Mono.just(new AuthorizationDecision(false));
         }
 
@@ -58,7 +57,7 @@ public class AuthorizationManager implements ReactiveAuthorizationManager<Author
         //TODO:从Redis中获取当前路径可访问角色列表
         List<String> authorities = new ArrayList<>();
         //查询表
-        authorities.add("1");
+        authorities.add("/login/logout");
         //认证通过且角色匹配的用户可访问当前路径
         return mono
                 .filter(Authentication::isAuthenticated)
