@@ -45,7 +45,7 @@ public class SecurityUser implements UserDetails {
         this.username=userDTO.getName();
         this.password=userDTO.getPassword();
         this.enabled=true;
-        if (ObjectUtils.isEmpty(userDTO.getRole())) {
+        if (!ObjectUtils.isEmpty(userDTO.getRole())) {
             authorities = new ArrayList<>();
             userDTO.getRole().forEach(role -> authorities.add(new SimpleGrantedAuthority(role)));
         }

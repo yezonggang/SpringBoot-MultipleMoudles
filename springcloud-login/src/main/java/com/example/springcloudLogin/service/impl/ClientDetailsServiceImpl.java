@@ -4,7 +4,9 @@ import com.example.springcloudLogin.entity.OauthClientEntity;
 import com.example.springcloudLogin.mapper.OauthClientMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.ClientRegistrationException;
@@ -19,6 +21,9 @@ import org.springframework.util.ObjectUtils;
 public class ClientDetailsServiceImpl implements ClientDetailsService {
     @Autowired
     private OauthClientMapper oauthClientMapper;
+    @Lazy
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     @Override
     public ClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {
         try {
@@ -33,7 +38,7 @@ public class ClientDetailsServiceImpl implements ClientDetailsService {
                         oauthClient.getAuthorities(),
                         oauthClient.getWebServerRedirectUri()
                 );
-                clientDetails.setClientSecret(oauthClient.getClientSecret());
+                clientDetails.setClientSecret(passwordEncoder.encode(oauthClient.getClientSecret()));
                 clientDetails.setAccessTokenValiditySeconds(oauthClient.getAccessTokenValidity());
                 clientDetails.setRefreshTokenValiditySeconds(oauthClient.getRefreshTokenValidity());
                 return clientDetails;
