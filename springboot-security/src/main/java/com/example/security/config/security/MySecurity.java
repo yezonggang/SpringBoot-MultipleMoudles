@@ -88,8 +88,10 @@ public class MySecurity extends WebSecurityConfigurerAdapter {
 
         // 针对login请求拦截
         http.addFilterAt(jsonAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+
         //因为用不到session，所以选择禁用
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
         // token拦截
         http.addFilterAfter(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
