@@ -20,6 +20,9 @@ Home 光标到行首
 
 End 光标到行尾
 
+Ctrl+Shift+n 全局搜索
+
+
 Ctrl+Alt+R 全局搜索替换
 
 Ctrl + Shift + l   注释选中代码块

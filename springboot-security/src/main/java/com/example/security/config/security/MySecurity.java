@@ -44,8 +44,8 @@ import java.util.List;
  * @author yzg
  */
 @EnableWebSecurity
-public class MasSecurity extends WebSecurityConfigurerAdapter {
-    private static final Logger logger = LoggerFactory.getLogger(MasSecurity.class);
+public class MySecurity extends WebSecurityConfigurerAdapter {
+    private static final Logger logger = LoggerFactory.getLogger(MySecurity.class);
 
     @Autowired
     LoginAuthProvider loginAuthProvider;
@@ -78,13 +78,19 @@ public class MasSecurity extends WebSecurityConfigurerAdapter {
         //当访问接口失败的配置
         http.exceptionHandling().authenticationEntryPoint(new InterfaceAccessException());
         http.authorizeRequests()
-                .antMatchers("/","/login", "/swagger-ui.html","/swagger-resources/**","/webjars/**","/v2/**","/api/**").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .formLogin().loginProcessingUrl("/login")
-                .and().addFilterAt(jsonAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);//因为用不到session，所以选择禁用
+                .antMatchers("/", "/swagger-ui.html","/swagger-resources/**","/webjars/**","/v2/**","/api/**").permitAll()
+                .anyRequest().authenticated();
+/*                .and()
+                .formLogin().loginProcessingUrl("/login");*/
+
+        // 登出接口
         http.logout().logoutUrl("/logout").logoutSuccessHandler(logoutSuccessHandler()).deleteCookies(jsonWebTokenProperty.getHeader()).clearAuthentication(true);
+
+        // 针对login请求拦截
+        http.addFilterAt(jsonAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+        //因为用不到session，所以选择禁用
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        // token拦截
         http.addFilterAfter(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
     }
