@@ -66,7 +66,21 @@ java：https://github.com/FengQingZhang/sz-java
 
 gitee地址：https://gitee.com/sunym1993/datauoauthqq_bean
 
------------------------- 其他参考
+
+------------------------ 诸葛说架构
+
+https://space.bilibili.com/1810096630/video
+
+---springboot启动过程参考
+
+https://www.bilibili.com/video/BV1KY4y1B7Xd?p=10&vd_source=837a80ccc382967b7ab909f9407a02a4
+
+
+------------------------ nocas参考
+
+https://www.bilibili.com/video/BV1DY411A7ot?spm_id_from=333.999.0.0
+
+
 
 
 

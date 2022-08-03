@@ -44,7 +44,9 @@ public class CustomFeignClientFactory {
     public <T> T createFeignClient(Class<T> clazz,String ip){
         return Feign.builder().logger(new Slf4jLogger(clazz))
                 .logLevel(Logger.Level.FULL)
+                //契约配置
                 .contract(CONTRACT)
+                //超时设置
                 .options(OPTIONS)
                 .client(new OkHttpClient(myCustomOkHttpClient))
                 .target(clazz, getUrl(ip));
