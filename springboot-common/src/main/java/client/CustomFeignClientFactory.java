@@ -4,21 +4,14 @@ import feign.Contract;
 import feign.Feign;
 import feign.Logger;
 import feign.Request;
-import feign.codec.Decoder;
-import feign.codec.Encoder;
 import feign.okhttp.OkHttpClient;
 import feign.slf4j.Slf4jLogger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.AutoConfigureBefore;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.cloud.openfeign.FeignAutoConfiguration;
 import org.springframework.cloud.openfeign.support.SpringMvcContract;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.Base64;
 import java.util.concurrent.TimeUnit;
 
 /**

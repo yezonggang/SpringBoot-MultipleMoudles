@@ -23,4 +23,18 @@ public class SecurityConstants extends SecurityConstraint {
      * JWT ID 唯一标识
      */
     public static final String JWT_EXP = "exp";
+    /**
+     * JWT存储权限前缀
+     */
+    public static final String AUTHORITY_PREFIX = "ROLE_";
+
+    /**
+     * JWT存储权限属性
+     */
+    public static final String JWT_AUTHORITIES_KEY = "authorities";
+
+    public static final String USER_ID="userId";
+
+    public final static String PRINCIPAL_NAME="principal";
+
 }

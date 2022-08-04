@@ -16,20 +16,5 @@ public class SpringbootNacosApplication {
     public static void main(String[] args) {
         SpringApplication.run(SpringbootNacosApplication.class, args);
     }
-
-    @Value("${t1}")
-    private String t1;
-
-    @RestController
-    class EchoController {
-        @RequestMapping(value = "/echo/{string}", method = RequestMethod.GET)
-        public String echo(@PathVariable String string) {
-            return "Hello Nacos Discovery " + string;
-        }
-        @RequestMapping(value = "/select", method = RequestMethod.GET)
-        public String echo1() {
-            return t1;
-        }
-    }
 }
 

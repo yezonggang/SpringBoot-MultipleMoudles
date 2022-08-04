@@ -1,18 +1,43 @@
 package com.example.springcloudLogin.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.springcloudLogin.vo.Oauth2TokenVO;
 import constant.SecurityConstants;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.security.oauth2.provider.endpoint.TokenEndpoint;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.annotation.*;
 import response.ResponseData;
 import utils.JwtUtils;
 
+import java.security.Principal;
+import java.util.Map;
+
 @Slf4j
 @RestController
+@RequestMapping("/oauth")
 public class LoginController {
+    @Autowired
+    private TokenEndpoint tokenEndpoint;
 
+    /**
+     * Oauth2登录认证
+     */
+    @RequestMapping(value = "/token", method = RequestMethod.POST)
+    public ResponseData postAccessToken(Principal principal, @RequestParam Map<String, String> parameters) throws HttpRequestMethodNotSupportedException {
+        OAuth2AccessToken oAuth2AccessToken = tokenEndpoint.postAccessToken(principal, parameters).getBody();
+        Oauth2TokenVO oauth2TokenVO = Oauth2TokenVO.builder()
+                .token(oAuth2AccessToken.getValue())
+                .refreshToken(oAuth2AccessToken.getRefreshToken().getValue())
+                .expiresIn(oAuth2AccessToken.getExpiresIn())
+                .tokenHead("Bearer ").build();
+
+        return ResponseData.success(oauth2TokenVO);
+    }
+/*
     @ApiOperation(value = "注销")
     @DeleteMapping("/logout")
     public ResponseData logout() {
@@ -29,5 +54,5 @@ public class LoginController {
             log.info("登录退出，假设实现了token注销");
         }
         return ResponseData.success("注销成功");
-    }
+    }*/
 }

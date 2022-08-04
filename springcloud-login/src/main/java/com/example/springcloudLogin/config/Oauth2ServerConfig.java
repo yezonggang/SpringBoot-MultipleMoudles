@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
@@ -16,17 +15,16 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
-import org.springframework.security.oauth2.provider.CompositeTokenGranter;
-import org.springframework.security.oauth2.provider.TokenGranter;
-import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
-import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
-import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
-import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
+import org.springframework.security.rsa.crypto.KeyStoreKeyFactory;
 
 import java.security.KeyPair;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @AllArgsConstructor
@@ -46,19 +44,6 @@ public class Oauth2ServerConfig extends AuthorizationServerConfigurerAdapter {
      */
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-/*        *//**
-         *
-         *简单使用，存放在内存中
-         * @param clientsDetails
-         * @throws Exception
-         */
-/*        clients.inMemory()
-                .withClient("client-app")
-                .secret(passwordEncoder.encode("123456"))
-                .scopes("all")
-                .authorizedGrantTypes("password")
-                .accessTokenValiditySeconds(3600)
-                .refreshTokenValiditySeconds(86400);*/
         /**
          * 授权用户存放在数据库中
          */
@@ -67,27 +52,16 @@ public class Oauth2ServerConfig extends AuthorizationServerConfigurerAdapter {
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-        // 将自定义的授权类型添加到tokenGranters中
-        List<TokenGranter> tokenGranters = new ArrayList<>(Collections.singletonList(endpoints.getTokenGranter()));
-        // 添加手机短信验证码授权模式的授权者
-        tokenGranters.add(new LoginTokenGranter(endpoints.getTokenServices(), endpoints.getClientDetailsService(),
-                endpoints.getOAuth2RequestFactory(), authenticationManager));
+        TokenEnhancerChain enhancerChain = new TokenEnhancerChain();
+        List<TokenEnhancer> delegates = new ArrayList<>();
+        delegates.add(tokenEnhancer());
+        delegates.add(accessTokenConverter());
+        enhancerChain.setTokenEnhancers(delegates); //配置JWT的内容增强器
+        endpoints.authenticationManager(authenticationManager)
+                .userDetailsService(userDetailsService) //配置加载用户信息的服务
+                .accessTokenConverter(accessTokenConverter())
+                .tokenEnhancer(enhancerChain);
 
-
-        endpoints
-                //设置异常WebResponseExceptionTranslator，用于处理用户名，密码错误、授权类型不正确的异常
-                //.exceptionTranslator(new OAuthServerWebResponseExceptionTranslator())
-                //授权码模式所需要的authorizationCodeServices
-                //.authorizationCodeServices(authorizationCodeServices())
-                //密码模式所需要的authenticationManager
-                .authenticationManager(authenticationManager)
-                //令牌管理服务，无论哪种模式都需要
-                .tokenServices(tokenServices())
-                .userDetailsService(userDetailsService)
-                //添加进入tokenGranter
-                .tokenGranter(new CompositeTokenGranter(tokenGranters))
-                //只允许POST提交访问令牌，uri：/oauth/token
-                .allowedTokenEndpointRequestMethods(HttpMethod.POST);
     }
 
     /**
@@ -102,29 +76,6 @@ public class Oauth2ServerConfig extends AuthorizationServerConfigurerAdapter {
 
 
     /**
-     * 令牌管理服务的配置
-     */
-    @Bean
-    public DefaultTokenServices tokenServices() {
-
-        DefaultTokenServices tokenServices = new DefaultTokenServices();
-        //令牌服务
-        tokenServices.setTokenStore(tokenStore());
-        //支持令牌的刷新
-        tokenServices.setSupportRefreshToken(true);
-        //客户端端配置策略
-        tokenServices.setClientDetailsService(clientDetailsService);
-        //access_token的过期时间
-        tokenServices.setAccessTokenValiditySeconds(60 * 60 * 24 * 3);
-        //refresh_token的过期时间
-        tokenServices.setRefreshTokenValiditySeconds(60 * 60 * 24 * 3);
-        //设置令牌增强，使用JwtAccessTokenConverter进行转换
-        tokenServices.setTokenEnhancer(accessTokenConverter());
-
-        return tokenServices;
-
-    }
-    /**
      * JWT内容增强
      */
     @Bean
@@ -135,7 +86,6 @@ public class Oauth2ServerConfig extends AuthorizationServerConfigurerAdapter {
             if (principal instanceof SecurityUser) {
                 SecurityUser sysUserDetails = (SecurityUser) principal;
                 additionalInfo.put("userId", sysUserDetails.getId());
-                additionalInfo.put("username", sysUserDetails.getUsername());
             }
             ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(additionalInfo);
             return accessToken;
@@ -143,14 +93,6 @@ public class Oauth2ServerConfig extends AuthorizationServerConfigurerAdapter {
         return tokenEnhancer;
     }
 
-    /**
-     * 令牌的存储策略
-     */
-    @Bean
-    public TokenStore tokenStore() {
-        //使用JwtTokenStore生成JWT令牌
-        return new JwtTokenStore(accessTokenConverter());
-    }
 
     /**
      * 使用非对称加密算法对token签名
@@ -167,8 +109,8 @@ public class Oauth2ServerConfig extends AuthorizationServerConfigurerAdapter {
     @Bean
     public KeyPair keyPair() {
         //从classpath下的证书中获取秘钥对
-        KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new ClassPathResource("jwt.jks"), "spring-cloud".toCharArray());
-        return keyStoreKeyFactory.getKeyPair("springcloud", "spring-cloud".toCharArray());
+        KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new ClassPathResource("jwt.jks"), "123456".toCharArray());
+        return keyStoreKeyFactory.getKeyPair("jwt", "123456".toCharArray());
     }
 
 }
