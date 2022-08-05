@@ -2,12 +2,10 @@ package com.example.springcloudgateway.filter;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.example.springcloudgateway.config.WhiteListConfig;
 import com.nimbusds.jose.JWSObject;
 import constant.SecurityConstants;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
@@ -18,15 +16,12 @@ import reactor.core.publisher.Mono;
 
 import java.net.URLEncoder;
 import java.text.ParseException;
-import java.util.List;
 
 /**
  * 将登录用户的JWT转化成用户信息的全局过滤器
  */
 @Component
 public class GateWayGlobalFilter implements GlobalFilter, Ordered {
-    @Autowired
-    private WhiteListConfig whiteListConfig;
 
     @SneakyThrows
     @Override
