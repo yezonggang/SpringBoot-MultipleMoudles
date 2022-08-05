@@ -16,7 +16,7 @@ public  class BaseResponse {
     }
 
     public static  BaseResponse success(Object data){
-        return new BaseResponse(20000,data);
+        return new BaseResponse(200,data);
     }
 
 

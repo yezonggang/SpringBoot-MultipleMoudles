@@ -27,7 +27,7 @@ public class ResponseData implements Serializable {
     }
 
     public static ResponseData success(Object data){
-        return new ResponseData(20000,"success",data);
+        return new ResponseData(200,"success",data);
     }
 
     public static ResponseData fail(ApiError apiError){

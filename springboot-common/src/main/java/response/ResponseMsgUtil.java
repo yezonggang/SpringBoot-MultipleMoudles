@@ -22,7 +22,7 @@ public class ResponseMsgUtil {
      */
     public static void sendSuccessMsg(String msg, Object data, HttpServletResponse response) throws IOException {
         Map<String,Object> map = new HashMap<>();
-        map.put("code",20000);
+        map.put("code",200);
         map.put("msg",msg);
         map.put("state","ok");
         if (data!=null){

@@ -43,7 +43,7 @@ public class GateWayGlobalFilter implements GlobalFilter, Ordered {
             String payload = JWSObject.parse(token).getPayload().toString();
             JSONObject jsonObject = JSON.parseObject(payload);
             // token有效不在黑名单中，request写入JWT的载体信息传递给其他服务
-            request = exchange.getRequest().mutate().header(SecurityConstants.JWT_PAYLOAD_KEY,SecurityConstants.JWT_PAYLOAD_KEY, URLEncoder.encode(jsonObject.toJSONString(), "UTF-8")).build();
+            request = exchange.getRequest().mutate().header(SecurityConstants.JWT_PAYLOAD_KEY, URLEncoder.encode(jsonObject.toJSONString(), "UTF-8")).build();
             exchange = exchange.mutate().request(request).build();
         } catch (ParseException e) {
             e.printStackTrace();
