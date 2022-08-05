@@ -21,10 +21,7 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import org.springframework.security.rsa.crypto.KeyStoreKeyFactory;
 
 import java.security.KeyPair;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @AllArgsConstructor
@@ -88,6 +85,8 @@ public class Oauth2ServerConfig extends AuthorizationServerConfigurerAdapter {
                 additionalInfo.put("userId", sysUserDetails.getId());
             }
             ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(additionalInfo);
+            ((DefaultOAuth2AccessToken) accessToken).setExpiration(new Date(System.currentTimeMillis() + 30 * 1000));//30秒的access_token
+
             return accessToken;
         };
         return tokenEnhancer;
