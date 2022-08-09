@@ -5,9 +5,9 @@ server:
 spring:
   datasource:
     enable: true
-    url: jdbc:mysql://39.103.218.1:3306/security?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
+    url: jdbc:mysql://10.121.198.188:3306/security?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
     username: root
-    password: admin@admin@123
+    password: 1q2w!Q@W
     driver-class-name: com.mysql.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
 #    entity-package: com.example.security.entity
