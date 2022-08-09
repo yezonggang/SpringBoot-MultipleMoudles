@@ -84,7 +84,7 @@ public class MySecurity extends WebSecurityConfigurerAdapter {
                 .formLogin().loginProcessingUrl("/login");*/
 
         // 登出接口
-        http.logout().logoutUrl("/logout").logoutSuccessHandler(logoutSuccessHandler()).deleteCookies(jsonWebTokenProperty.getHeader()).clearAuthentication(true);
+        http.logout().logoutUrl("/user/logout").logoutSuccessHandler(logoutSuccessHandler()).deleteCookies(jsonWebTokenProperty.getHeader()).clearAuthentication(true);
 
         // 针对login请求拦截
         http.addFilterAt(jsonAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
@@ -100,7 +100,7 @@ public class MySecurity extends WebSecurityConfigurerAdapter {
     @Bean(name="myRequestMatcher")
     public  SkipPathAntMatcher skipPathAntMatcher(){
         List<String> uris = new LinkedList<>();
-        uris.add("/login");
+        uris.add("/user/login");
         uris.add("/swagger-resources/**");
         uris.add("/webjars/**");
         uris.add("/v2/**");
@@ -119,7 +119,7 @@ public class MySecurity extends WebSecurityConfigurerAdapter {
     public JsonAuthenticationFilter jsonAuthenticationFilter() throws Exception {
         JsonAuthenticationFilter filter = new JsonAuthenticationFilter();
         filter.setAuthenticationManager(authenticationManagerBean());
-        filter.setFilterProcessesUrl("/login");
+        filter.setFilterProcessesUrl("/user/login");
         filter.setAuthenticationSuccessHandler(new MySuccessHandler());
         filter.setAuthenticationFailureHandler(new MyFailHandler());
         return filter;

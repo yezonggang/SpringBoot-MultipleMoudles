@@ -25,7 +25,7 @@ public class ResourceServerManager implements ReactiveAuthorizationManager<Autho
     @Override
     public Mono<AuthorizationDecision> check(Mono<Authentication> mono, AuthorizationContext authorizationContext) {
         ServerHttpRequest request = authorizationContext.getExchange().getRequest();
-        if (request.getMethod() == HttpMethod.OPTIONS) { // 预检请求放行
+        if (request.getMethod() == HttpMethod.OPTIONS || request.getMethod()==HttpMethod.POST) { // 预检请求放行
             return Mono.just(new AuthorizationDecision(true));
         }
         // 如果token以"bearer "为前缀，到此方法里说明JWT有效即已认证

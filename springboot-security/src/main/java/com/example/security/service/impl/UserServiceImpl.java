@@ -58,12 +58,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserEntity> impleme
 
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
+/*
     public IPage<UserEntity> testPage(String userName){
         Page<UserEntity> page = new Page<UserEntity>(1,10);
         OrderItem orderItem = new OrderItem(userName, true);
         page.addOrder(orderItem);
         return userMapper.selectPageVo(page);
     }
+*/
 
 
 
