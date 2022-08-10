@@ -1,6 +1,8 @@
 package com.example.springcloudLogin.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.example.springcloudLogin.entity.OauthTokenEntity;
 import com.example.springcloudLogin.vo.Oauth2TokenVO;
 import constant.SecurityConstants;
 import io.swagger.annotations.ApiOperation;
@@ -14,6 +16,7 @@ import response.ResponseData;
 import utils.JwtUtils;
 
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
@@ -28,6 +31,27 @@ public class LoginController {
      */
     @RequestMapping(value = "/token", method = RequestMethod.POST)
     public ResponseData postAccessToken(Principal principal, @RequestParam Map<String, String> parameters) throws HttpRequestMethodNotSupportedException {
+        OAuth2AccessToken oAuth2AccessToken = tokenEndpoint.postAccessToken(principal, parameters).getBody();
+        Oauth2TokenVO oauth2TokenVO = Oauth2TokenVO.builder()
+                .token(oAuth2AccessToken.getValue())
+                .refreshToken(oAuth2AccessToken.getRefreshToken().getValue())
+                .expiresIn(oAuth2AccessToken.getExpiresIn())
+                .tokenHead("Bearer ").build();
+
+        return ResponseData.success(oauth2TokenVO);
+    }
+
+    @RequestMapping(value = "/token2", method = RequestMethod.POST)
+    public ResponseData postAccessToken(Principal principal, @RequestBody OauthTokenEntity oauthTokenEntity) throws HttpRequestMethodNotSupportedException {
+        Map<String,String> parameters = new HashMap();
+        System.out.println(String.format("oauthTokenEntity:%s",oauthTokenEntity));
+        parameters.put("username", oauthTokenEntity.getUserName());
+        parameters.put("password", oauthTokenEntity.getPassWord());
+        parameters.put("client_id", oauthTokenEntity.getClientId());
+        parameters.put("scope", oauthTokenEntity.getScope());
+        parameters.put("client_secret", oauthTokenEntity.getClientSecret());
+        parameters.put("grant_type", oauthTokenEntity.getGrantType());
+        System.out.println(String.format("parameters:%s",parameters));
         OAuth2AccessToken oAuth2AccessToken = tokenEndpoint.postAccessToken(principal, parameters).getBody();
         Oauth2TokenVO oauth2TokenVO = Oauth2TokenVO.builder()
                 .token(oAuth2AccessToken.getValue())
