@@ -3,11 +3,11 @@ spring:
     nacos:
       server-addr: 10.121.198.188:8848 #nacos服务地址
       discovery:
-        namespace: f4ff5f44-4739-42db-a31b-a56ce7952554
+        namespace: 4dbba9aa-fb23-4540-9c5a-d1ed1d9c4230
         enabled: true #默认值
       config:
         file-extension: yml #文件后缀名
-        namespace: f4ff5f44-4739-42db-a31b-a56ce7952554
+        namespace: 4dbba9aa-fb23-4540-9c5a-d1ed1d9c4230
         enabled: true #默认值
         refresh-enabled: true # 运行自动刷新配置
         prefix: gateway-service #配置文件前缀

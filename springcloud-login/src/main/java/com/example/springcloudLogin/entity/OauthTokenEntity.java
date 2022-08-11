@@ -8,15 +8,15 @@ import lombok.Data;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OauthTokenEntity {
     @JsonProperty(value="username")
-    private String userName;
+    private String username;
     @JsonProperty(value="password")
-    private String passWord;
+    private String password;
     @JsonProperty(value="client_id")
-    private String clientId;
+    private String client_id;
     @JsonProperty(value="grant_type")
-    private String grantType;
+    private String grant_type;
     @JsonProperty(value="client_secret")
-    private String clientSecret;
+    private String client_secret;
     @JsonProperty(value="scope")
     private String scope;
 }

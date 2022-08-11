@@ -1,22 +1,24 @@
 package com.example.springcloudLogin.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.example.springcloudLogin.entity.OauthTokenEntity;
+import com.example.springcloudLogin.service.impl.ClientDetailsServiceImpl;
 import com.example.springcloudLogin.vo.Oauth2TokenVO;
 import constant.SecurityConstants;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.endpoint.TokenEndpoint;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.*;
 import response.ResponseData;
+import utils.JsonUtil;
 import utils.JwtUtils;
 
-import java.security.Principal;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.Map;
 
 @Slf4j
@@ -25,34 +27,27 @@ import java.util.Map;
 public class LoginController {
     @Autowired
     private TokenEndpoint tokenEndpoint;
+    @Autowired
+    private ClientDetailsServiceImpl clientDetailsService;
+
 
     /**
      * Oauth2登录认证
      */
-    @RequestMapping(value = "/token", method = RequestMethod.POST)
-    public ResponseData postAccessToken(Principal principal, @RequestParam Map<String, String> parameters) throws HttpRequestMethodNotSupportedException {
-        OAuth2AccessToken oAuth2AccessToken = tokenEndpoint.postAccessToken(principal, parameters).getBody();
-        Oauth2TokenVO oauth2TokenVO = Oauth2TokenVO.builder()
-                .token(oAuth2AccessToken.getValue())
-                .refreshToken(oAuth2AccessToken.getRefreshToken().getValue())
-                .expiresIn(oAuth2AccessToken.getExpiresIn())
-                .tokenHead("Bearer ").build();
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public ResponseData login(@RequestBody OauthTokenEntity oauthTokenEntity) throws HttpRequestMethodNotSupportedException {
 
-        return ResponseData.success(oauth2TokenVO);
-    }
-
-    @RequestMapping(value = "/token2", method = RequestMethod.POST)
-    public ResponseData postAccessToken(Principal principal, @RequestBody OauthTokenEntity oauthTokenEntity) throws HttpRequestMethodNotSupportedException {
-        Map<String,String> parameters = new HashMap();
+        ClientDetails clientDetails = clientDetailsService.loadClientByClientId(oauthTokenEntity.getClient_id());
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(clientDetails.getClientId(), null,new ArrayList<>());
         System.out.println(String.format("oauthTokenEntity:%s",oauthTokenEntity));
-        parameters.put("username", oauthTokenEntity.getUserName());
-        parameters.put("password", oauthTokenEntity.getPassWord());
-        parameters.put("client_id", oauthTokenEntity.getClientId());
-        parameters.put("scope", oauthTokenEntity.getScope());
-        parameters.put("client_secret", oauthTokenEntity.getClientSecret());
-        parameters.put("grant_type", oauthTokenEntity.getGrantType());
+        Map<String, String> parameters = null;
+        try {
+            parameters = JsonUtil.convert(oauthTokenEntity);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         System.out.println(String.format("parameters:%s",parameters));
-        OAuth2AccessToken oAuth2AccessToken = tokenEndpoint.postAccessToken(principal, parameters).getBody();
+        OAuth2AccessToken oAuth2AccessToken = tokenEndpoint.postAccessToken(usernamePasswordAuthenticationToken, parameters).getBody();
         Oauth2TokenVO oauth2TokenVO = Oauth2TokenVO.builder()
                 .token(oAuth2AccessToken.getValue())
                 .refreshToken(oAuth2AccessToken.getRefreshToken().getValue())
