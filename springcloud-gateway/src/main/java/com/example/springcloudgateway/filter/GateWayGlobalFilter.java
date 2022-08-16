@@ -35,10 +35,12 @@ public class GateWayGlobalFilter implements GlobalFilter, Ordered {
 
             // 解析JWT获取jti，以jti为key判断redis的黑名单列表是否存在，存在则拦截访问
             token = StringUtils.replaceIgnoreCase(token, SecurityConstants.JWT_PREFIX, SecurityConstants.STRING_NULL);
+            //fegin调用查询是否存在当前有效的token值，若存在刷新token有效时间，若不存在，请重新登录
+
             String payload = JWSObject.parse(token).getPayload().toString();
             JSONObject jsonObject = JSON.parseObject(payload);
             // token有效不在黑名单中，request写入JWT的载体信息传递给其他服务
-            request = exchange.getRequest().mutate().header(SecurityConstants.JWT_PAYLOAD_KEY, URLEncoder.encode(jsonObject.toJSONString(), "UTF-8")).build();
+            request = exchange.getRequest().mutate().header(SecurityConstants.JWT_PAYLOAD_KEY, jsonObject.toJSONString()).build();
             exchange = exchange.mutate().request(request).build();
         } catch (ParseException e) {
             e.printStackTrace();

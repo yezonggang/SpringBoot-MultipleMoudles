@@ -1,50 +1,53 @@
 package com.example.springcloudLogin.service.impl;
 
-import com.example.springcloudLogin.dto.UserDTO;
-import com.example.springcloudLogin.vo.SecurityUser;
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.springcloudLogin.entity.UserEntity;
+import com.example.springcloudLogin.mapper.UserMapper;
+import com.github.yulichang.query.MPJQueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
+import utils.JwtUtils;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
-public class UserServiceImpl implements UserDetailsService {
-    private List<UserDTO> userList;
-    @Lazy
+public class UserServiceImpl extends ServiceImpl<UserMapper, UserEntity> implements UserDetailsService, IService<UserEntity> {
+
     @Autowired
-    private PasswordEncoder passwordEncoder;
-
+    private UserMapper userMapper;
     @Override
-    public SecurityUser loadUserByUsername(String username) throws UsernameNotFoundException {
-        String password = passwordEncoder.encode("123456");
-        //String password = "123456";
-        userList = new ArrayList<>();
-        userList.add(new UserDTO(1L,"macro", password,1, Collections.singletonList("ADMIN")));
-        userList.add(new UserDTO(2L,"andy", password,1, Collections.singletonList("TEST")));
-
-        List<UserDTO> findUserList = userList.stream().filter(item -> item.getName().equals(username)).collect(Collectors.toList());
-        if (ObjectUtils.isEmpty(findUserList)) {
-            throw new UsernameNotFoundException("user name or passwd not find ");
+    public UserEntity loadUserByUsername(String username) throws UsernameNotFoundException {
+        username=StringUtils.isEmpty(username)? JwtUtils.getJwtPayload().get("user_name").toString():username;
+        UserEntity user = userMapper.selectJoinOne(UserEntity.class, new MPJQueryWrapper<UserEntity>()
+                .select("t.id,t.username as username,t.password ,group_concat(DISTINCT ro.`name`) as roles")
+                .leftJoin("role_user AS ru ON ru.user_id = t.id")
+                .leftJoin("role ro ON ro.id = ru.role_id")
+                .groupBy("t.id ,t.username,t.password")
+                .eq("t.username",username));
+        if (!ObjectUtils.isEmpty(user.getRoles())) {
+            List<SimpleGrantedAuthority> list = new ArrayList<>();
+            Arrays.asList(user.getRoles().split(",")).forEach(e -> list.add(new SimpleGrantedAuthority(e)));
+            user.setAuthorities(list);
+            System.out.println(user);
         }
-        SecurityUser securityUser = new SecurityUser(findUserList.get(0));
-        if (!securityUser.isEnabled()) {
+        if (!user.isEnabled()) {
             throw new DisabledException("ACCOUNT_DISABLED");
-        } else if (!securityUser.isAccountNonLocked()) {
+        } else if (!user.isAccountNonLocked()) {
             throw new LockedException("ACCOUNT_LOCKED");
-        }  else if (!securityUser.isCredentialsNonExpired()) {
+        }  else if (!user.isCredentialsNonExpired()) {
             throw new CredentialsExpiredException("CREDENTIALS_EXPIRED");
         }
-        return securityUser;
+        return user;
     }
 }

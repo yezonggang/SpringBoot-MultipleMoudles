@@ -2,8 +2,10 @@ package com.example.springcloudLogin.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.springcloudLogin.entity.OauthTokenEntity;
+import com.example.springcloudLogin.entity.UserEntity;
 import com.example.springcloudLogin.service.impl.ClientDetailsServiceImpl;
-import com.example.springcloudLogin.vo.Oauth2TokenVO;
+import com.example.springcloudLogin.service.impl.UserServiceImpl;
+import com.example.springcloudLogin.vo.LoginInfoVO;
 import constant.SecurityConstants;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -14,47 +16,51 @@ import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.endpoint.TokenEndpoint;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import response.ResponseData;
 import utils.JsonUtil;
 import utils.JwtUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 
 @Slf4j
 @RestController
-@RequestMapping("/oauth")
+@RequestMapping("/user")
 public class LoginController {
     @Autowired
     private TokenEndpoint tokenEndpoint;
     @Autowired
     private ClientDetailsServiceImpl clientDetailsService;
-
+    @Autowired
+    private UserServiceImpl userService;
 
     /**
      * Oauth2登录认证
      */
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseData login(@RequestBody OauthTokenEntity oauthTokenEntity) throws HttpRequestMethodNotSupportedException {
+        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        String clientId = requestAttributes.getRequest().getHeader("client_id");
+        String grant_type = requestAttributes.getRequest().getHeader("grant_type");
+        ClientDetails clientDetails = clientDetailsService.loadClientByClientId(clientId);
 
-        ClientDetails clientDetails = clientDetailsService.loadClientByClientId(oauthTokenEntity.getClient_id());
+        //信息分装
+        oauthTokenEntity.setClient_id(clientId);
+        oauthTokenEntity.setClient_secret(clientDetails.getClientSecret());
+        oauthTokenEntity.setGrant_type(grant_type);
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(clientDetails.getClientId(), null,new ArrayList<>());
-        System.out.println(String.format("oauthTokenEntity:%s",oauthTokenEntity));
         Map<String, String> parameters = null;
         try {
             parameters = JsonUtil.convert(oauthTokenEntity);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println(String.format("parameters:%s",parameters));
         OAuth2AccessToken oAuth2AccessToken = tokenEndpoint.postAccessToken(usernamePasswordAuthenticationToken, parameters).getBody();
-        Oauth2TokenVO oauth2TokenVO = Oauth2TokenVO.builder()
-                .token(oAuth2AccessToken.getValue())
-                .refreshToken(oAuth2AccessToken.getRefreshToken().getValue())
-                .expiresIn(oAuth2AccessToken.getExpiresIn())
-                .tokenHead("Bearer ").build();
 
-        return ResponseData.success(oauth2TokenVO);
+        return ResponseData.success(oAuth2AccessToken.getValue());
     }
 
     @ApiOperation(value = "注销")
@@ -75,4 +81,32 @@ public class LoginController {
         }
         return ResponseData.success("注销成功");
     }
+
+    /**
+     * 获取请用户信息
+     * @return
+     */
+    @GetMapping("/getInfo")
+    public ResponseData loginInfo() {
+        UserEntity userEntity = userService.loadUserByUsername(null);
+        LoginInfoVO loginInfoVO = new LoginInfoVO();
+        loginInfoVO.setName(userEntity.getUsername());
+        loginInfoVO.setRoles(new ArrayList<>(Arrays.asList(userEntity.getRoles().split(","))));
+        return ResponseData.success(loginInfoVO);
+    }
+
+    /*
+    @PostMapping("/user/check_login")
+    public void checkLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        userService.checkLogin(request,response);
+    }
+*/
+
+
+/*
+    @PostMapping("/refreshToken")
+    public void refreshToken(HttpServletRequest request,HttpServletResponse response){
+        userService.refreshToken(request,response);
+    }
+*/
 }

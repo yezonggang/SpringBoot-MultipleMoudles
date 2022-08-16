@@ -1,7 +1,7 @@
 package com.example.springcloudLogin.config;
 
+import com.example.springcloudLogin.entity.UserEntity;
 import com.example.springcloudLogin.service.impl.ClientDetailsServiceImpl;
-import com.example.springcloudLogin.vo.SecurityUser;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -57,6 +57,7 @@ public class Oauth2ServerConfig extends AuthorizationServerConfigurerAdapter {
         endpoints.authenticationManager(authenticationManager)
                 .userDetailsService(userDetailsService) //配置加载用户信息的服务
                 .accessTokenConverter(accessTokenConverter())
+                .reuseRefreshTokens(true)//RefreshToken时是否被重复使用
                 .tokenEnhancer(enhancerChain);
 
     }
@@ -80,12 +81,12 @@ public class Oauth2ServerConfig extends AuthorizationServerConfigurerAdapter {
         TokenEnhancer tokenEnhancer = (accessToken, authentication) -> {
             Map<String, Object> additionalInfo = new HashMap<>();
             Object principal = authentication.getUserAuthentication().getPrincipal();
-            if (principal instanceof SecurityUser) {
-                SecurityUser sysUserDetails = (SecurityUser) principal;
-                additionalInfo.put("userId", sysUserDetails.getId());
+            if (principal instanceof UserEntity) {
+                UserEntity userEntity = (UserEntity) principal;
+                additionalInfo.put("userId", userEntity.getId());
             }
             ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(additionalInfo);
-            ((DefaultOAuth2AccessToken) accessToken).setExpiration(new Date(System.currentTimeMillis() + 30 * 1000));//30秒的access_token
+            ((DefaultOAuth2AccessToken) accessToken).setExpiration(new Date(System.currentTimeMillis() + 300 * 1000));//30秒的access_token
 
             return accessToken;
         };

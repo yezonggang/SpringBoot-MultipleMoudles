@@ -36,11 +36,11 @@ public class ResourceServerManager implements ReactiveAuthorizationManager<Autho
             return Mono.just(new AuthorizationDecision(false));
         }
         /**
-         * 鉴权
+         * TODO:鉴权后期修改redis
          */
         List<String> authorities = new ArrayList<>();
-        authorities.add("ROLE_ADMIN");
-        authorities.add("ROLE_TEST");
+        authorities.add("ROLE_admin");
+        authorities.add("ROLE_editor");
 
         //认证通过且角色匹配的用户可访问当前路径
         return mono

@@ -17,7 +17,8 @@ public class JwtUtils {
         JSONObject jsonObject = null;
         String payload = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getHeader(SecurityConstants.JWT_PAYLOAD_KEY);
         if (!ObjectUtils.isEmpty(payload)) {
-            jsonObject = JSONObject.parseObject(URLDecoder.decode(payload, StandardCharsets.UTF_8.name()));
+            //jsonObject = JSONObject.parseObject(URLDecoder.decode(payload, StandardCharsets.UTF_8.name()));
+            jsonObject = JSONObject.parseObject(payload);
         }
         return jsonObject;
     }
