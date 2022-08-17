@@ -2,10 +2,12 @@ package response;
 
 import execption.ApiError;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
 @Data
+@NoArgsConstructor
 public class ResponseData implements Serializable {
     private final static String SUCCESS = "success";
     private final static String ERROR = "error";

@@ -1,9 +1,13 @@
 package com.example.springcloudLogin.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.springcloudLogin.entity.OauthTokenEntity;
+import com.example.springcloudLogin.entity.RefreshTokenEntity;
 import com.example.springcloudLogin.entity.UserEntity;
 import com.example.springcloudLogin.service.impl.ClientDetailsServiceImpl;
+import com.example.springcloudLogin.service.impl.RefreshTokenServiceImpl;
 import com.example.springcloudLogin.service.impl.UserServiceImpl;
 import com.example.springcloudLogin.vo.LoginInfoVO;
 import constant.SecurityConstants;
@@ -36,6 +40,8 @@ public class LoginController {
     private ClientDetailsServiceImpl clientDetailsService;
     @Autowired
     private UserServiceImpl userService;
+    @Autowired
+    private RefreshTokenServiceImpl refreshTokenService;
 
     /**
      * Oauth2登录认证
@@ -59,7 +65,11 @@ public class LoginController {
             e.printStackTrace();
         }
         OAuth2AccessToken oAuth2AccessToken = tokenEndpoint.postAccessToken(usernamePasswordAuthenticationToken, parameters).getBody();
-
+        //将token落库
+        RefreshTokenEntity refreshTokenEntity = new RefreshTokenEntity();
+        refreshTokenEntity.setUsename(oauthTokenEntity.getUsername());
+        refreshTokenEntity.setToken(oAuth2AccessToken.getValue());
+        refreshTokenService.insertToken(refreshTokenEntity);
         return ResponseData.success(oAuth2AccessToken.getValue());
     }
 
@@ -69,11 +79,14 @@ public class LoginController {
         JSONObject payload = JwtUtils.getJwtPayload();
         //String jti = payload.getString(SecurityConstants.JWT_JTI); // JWT唯一标识
         Long expireTime = payload.getLong(SecurityConstants.JWT_EXP); // JWT过期时间戳(单位：秒)
+        String username = payload.getString("user_name");
         if (expireTime != null) {
             long currentTime = System.currentTimeMillis() / 1000;// 当前时间（单位：秒）
             if (expireTime > currentTime) { // token未过期，添加至缓存作为黑名单限制访问，缓存时间为token过期剩余时间
-                //TODO:
-
+                //删除token
+                LambdaQueryWrapper<RefreshTokenEntity> queryWrapper = new QueryWrapper<RefreshTokenEntity>().lambda()
+                        .eq(RefreshTokenEntity::getUsename, username);
+                refreshTokenService.remove(queryWrapper);
                 log.info("登录退出，假设实现了token注销");
             }
         } else { // token 永不过期则永久加入黑名单
@@ -95,12 +108,10 @@ public class LoginController {
         return ResponseData.success(loginInfoVO);
     }
 
-    /*
-    @PostMapping("/user/check_login")
-    public void checkLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        userService.checkLogin(request,response);
+    @RequestMapping(value = "/checkToken", method = RequestMethod.GET)
+    public ResponseData checkLogin(@RequestParam("userName") String userName){
+       return ResponseData.success(refreshTokenService.checkLogin(userName));
     }
-*/
 
 
 /*

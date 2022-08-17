@@ -7,9 +7,6 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
-
 public class JwtUtils {
 
     @SneakyThrows
@@ -17,7 +14,6 @@ public class JwtUtils {
         JSONObject jsonObject = null;
         String payload = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getHeader(SecurityConstants.JWT_PAYLOAD_KEY);
         if (!ObjectUtils.isEmpty(payload)) {
-            //jsonObject = JSONObject.parseObject(URLDecoder.decode(payload, StandardCharsets.UTF_8.name()));
             jsonObject = JSONObject.parseObject(payload);
         }
         return jsonObject;

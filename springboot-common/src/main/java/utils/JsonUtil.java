@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
-import com.sun.istack.internal.NotNull;
+import javax.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -133,7 +133,7 @@ public class JsonUtil {
         return (HashMap<K, T>) map;
     }
 
-    public static Map<String, String> convert(@NotNull Object object) throws Exception {
+    public static Map<String, String> convert(@Nonnull Object object) throws Exception {
         Map<String, String> map = new HashMap<>();
         Class<?> clazz = object.getClass();
         for (Field field : clazz.getDeclaredFields()) {
