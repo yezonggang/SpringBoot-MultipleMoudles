@@ -18,9 +18,12 @@ public class VDemo02 {
 
         //理论上num结果应该为 2 万
         for (int i = 1; i <= 20; i++) {
-            new Thread(()->{
-                for (int j = 0; j < 1000 ; j++) {
-                    add();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    for (int j = 0; j < 1000; j++) {
+                        add();
+                    }
                 }
             }).start();
         }
