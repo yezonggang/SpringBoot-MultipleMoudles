@@ -3,6 +3,7 @@ package com.example.springcloudLogin.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.example.springcloudLogin.entity.LoginEntity;
 import com.example.springcloudLogin.entity.OauthTokenEntity;
 import com.example.springcloudLogin.entity.RefreshTokenEntity;
 import com.example.springcloudLogin.entity.UserEntity;
@@ -47,13 +48,16 @@ public class LoginController {
      * Oauth2登录认证
      */
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public ResponseData login(@RequestBody OauthTokenEntity oauthTokenEntity) throws HttpRequestMethodNotSupportedException {
+    public ResponseData login(@RequestBody LoginEntity loginEntity ) throws HttpRequestMethodNotSupportedException {
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         String clientId = requestAttributes.getRequest().getHeader("client_id");
         String grant_type = requestAttributes.getRequest().getHeader("grant_type");
         ClientDetails clientDetails = clientDetailsService.loadClientByClientId(clientId);
 
         //信息分装
+        OauthTokenEntity oauthTokenEntity = new OauthTokenEntity();
+        oauthTokenEntity.setUsername(loginEntity.getUsername());
+        oauthTokenEntity.setPassword(loginEntity.getPassword());
         oauthTokenEntity.setClient_id(clientId);
         oauthTokenEntity.setClient_secret(clientDetails.getClientSecret());
         oauthTokenEntity.setGrant_type(grant_type);
