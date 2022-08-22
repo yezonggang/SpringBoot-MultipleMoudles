@@ -1,6 +1,6 @@
 package com.example.springcloudLogin.config;
 
-import com.example.springcloudLogin.entity.UserEntity;
+import com.example.springcloudLogin.vo.UserEntityVO;
 import com.example.springcloudLogin.service.impl.ClientDetailsServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,12 +81,12 @@ public class Oauth2ServerConfig extends AuthorizationServerConfigurerAdapter {
         TokenEnhancer tokenEnhancer = (accessToken, authentication) -> {
             Map<String, Object> additionalInfo = new HashMap<>();
             Object principal = authentication.getUserAuthentication().getPrincipal();
-            if (principal instanceof UserEntity) {
-                UserEntity userEntity = (UserEntity) principal;
-                additionalInfo.put("userId", userEntity.getId());
+            if (principal instanceof UserEntityVO) {
+                UserEntityVO userEntityVO = (UserEntityVO) principal;
+                additionalInfo.put("userId", userEntityVO.getId());
             }
             ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(additionalInfo);
-            ((DefaultOAuth2AccessToken) accessToken).setExpiration(new Date(System.currentTimeMillis() + 300 * 1000));//30秒的access_token
+            ((DefaultOAuth2AccessToken) accessToken).setExpiration(new Date(System.currentTimeMillis() + 3000 * 1000));//30秒的access_token
 
             return accessToken;
         };

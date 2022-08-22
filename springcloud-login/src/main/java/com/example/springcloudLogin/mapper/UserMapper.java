@@ -1,9 +1,9 @@
 package com.example.springcloudLogin.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.springcloudLogin.entity.UserEntity;
+import com.example.springcloudLogin.vo.UserEntityVO;
 import com.github.yulichang.base.MPJBaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 

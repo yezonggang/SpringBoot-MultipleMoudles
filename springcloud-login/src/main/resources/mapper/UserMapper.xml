@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.springcloudLogin.mapper.UserMapper">
 
-    <select id="selectPageVo" resultType="com.example.springcloudLogin.entity.UserEntity">
+    <select id="selectPage" resultType="com.example.springcloudLogin.entity.UserEntity">
     SELECT id,username FROM user
     </select>
 

@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.springcloudLogin.entity.LoginEntity;
 import com.example.springcloudLogin.entity.OauthTokenEntity;
 import com.example.springcloudLogin.entity.RefreshTokenEntity;
-import com.example.springcloudLogin.entity.UserEntity;
+import com.example.springcloudLogin.vo.UserEntityVO;
 import com.example.springcloudLogin.service.impl.ClientDetailsServiceImpl;
 import com.example.springcloudLogin.service.impl.RefreshTokenServiceImpl;
 import com.example.springcloudLogin.service.impl.UserServiceImpl;
@@ -105,10 +105,10 @@ public class LoginController {
      */
     @GetMapping("/getInfo")
     public ResponseData loginInfo() {
-        UserEntity userEntity = userService.loadUserByUsername(null);
+        UserEntityVO userEntityVO = userService.loadUserByUsername(null);
         LoginInfoVO loginInfoVO = new LoginInfoVO();
-        loginInfoVO.setName(userEntity.getUsername());
-        loginInfoVO.setRoles(new ArrayList<>(Arrays.asList(userEntity.getRoles().split(","))));
+        loginInfoVO.setName(userEntityVO.getUsername());
+        loginInfoVO.setRoles(new ArrayList<>(Arrays.asList(userEntityVO.getRoles().split(","))));
         return ResponseData.success(loginInfoVO);
     }
 

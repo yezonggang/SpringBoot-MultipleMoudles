@@ -3,6 +3,7 @@ package com.example.springcloudLogin.service.impl;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.springcloudLogin.entity.UserEntity;
+import com.example.springcloudLogin.vo.UserEntityVO;
 import com.example.springcloudLogin.mapper.UserMapper;
 import com.github.yulichang.query.MPJQueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +28,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserEntity> impleme
     @Autowired
     private UserMapper userMapper;
     @Override
-    public UserEntity loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserEntityVO loadUserByUsername(String username) throws UsernameNotFoundException {
         username=StringUtils.isEmpty(username)? JwtUtils.getJwtPayload().get("user_name").toString():username;
-        UserEntity user = userMapper.selectJoinOne(UserEntity.class, new MPJQueryWrapper<UserEntity>()
+        UserEntityVO user = userMapper.selectJoinOne(UserEntityVO.class, new MPJQueryWrapper<UserEntityVO>()
                 .select("t.id,t.username as username,t.password ,group_concat(DISTINCT ro.`name`) as roles")
                 .leftJoin("role_user AS ru ON ru.user_id = t.id")
                 .leftJoin("role ro ON ro.id = ru.role_id")
