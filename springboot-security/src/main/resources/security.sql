@@ -10,6 +10,10 @@ CREATE TABLE if not  exists `user` (
   `password` varchar(255) NOT NULL,
   `avatar` varchar (255),
   `des` varchar(255),
+  `tel` varchar(255),
+  `email` varchar(255),
+  `create_time` timestamp,
+  `update_time` timestamp,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 INSERT INTO `user` VALUES (2, 'editor', '$2a$10$JJ82/k3LicFc6kbCYP7ekO4MyepyQCL7w4vX1cgPzgy91nC2sALhi','testavatar','admin');

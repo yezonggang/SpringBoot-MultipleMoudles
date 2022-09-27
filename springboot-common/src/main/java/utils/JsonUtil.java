@@ -5,13 +5,20 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import javax.annotation.Nonnull;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.CollectionType;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -143,5 +150,44 @@ public class JsonUtil {
         }
         return map;
     }
+
+    /**
+     *
+     *json是数组转成对象的list
+     * @return
+     */
+    public static <T> List<T> jsonToObjectListOne(String body,Class<T> clazz)  {
+        JSONArray jsonArray = JSONArray.parseArray(body);
+        ObjectMapper mapper = new ObjectMapper();
+        List<T> list = new ArrayList<T>();
+        try {
+            for (int i = 0; i < jsonArray.size(); i++) {
+                JSONObject object = jsonArray.getJSONObject(i);
+                list.add(mapper.readValue(object.toJSONString(), clazz));
+            }
+        }catch (Exception e){
+            return null;
+        }
+        return list;
+    }
+
+    /**
+     *
+     *json是数组转成对象的list
+     * @return
+     */
+
+    public static <T> List<T> jsonToObjectListTwo(String body,Class<T> clazz){
+        List<T> list;
+        ObjectMapper mapper = new ObjectMapper();
+        CollectionType collectionType = TypeFactory.defaultInstance().constructCollectionType(ArrayList.class, clazz);
+        try {
+            list = mapper.readValue(body, collectionType);
+        }catch (Exception e){
+            return null;
+        }
+        return list;
+    }
+
 
 }

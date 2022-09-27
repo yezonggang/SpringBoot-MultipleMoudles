@@ -1,8 +1,6 @@
 package com.example.springcloudLogin.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -10,6 +8,7 @@ import lombok.experimental.Accessors;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -26,13 +25,17 @@ import java.util.List;
 @ApiModel(value="User对象", description="")
 @TableName("user")
 public class UserEntity  {
-
-
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
     private String username;
     private String password;
     private String avatar;
     private String des;
+    private String tel;
+    private String email;
+    @TableField(value = "create_time",fill = FieldFill.INSERT)
+    private Date createTime;
+    @TableField(value = "update_time",fill = FieldFill.UPDATE)
+    private Date updateTime;
 
 }
