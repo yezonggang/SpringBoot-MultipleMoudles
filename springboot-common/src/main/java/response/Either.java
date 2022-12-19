@@ -2,6 +2,9 @@ package response;
 
 import java.util.Optional;
 
+/**
+ * @author y25958
+ */
 public class Either<L,R> {
     final public Optional<L> left;
     final public Optional<R> right;

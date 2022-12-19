@@ -6,7 +6,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import javax.annotation.Nonnull;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
@@ -189,5 +188,10 @@ public class JsonUtil {
         return list;
     }
 
+
+    public static <T> List<T> jsonToObjectListThree(String body,Class<T> clazz){
+        List<T> list;
+        return JSON.parseArray(body,clazz);
+    }
 
 }
