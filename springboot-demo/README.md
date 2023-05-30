@@ -22,8 +22,11 @@ End 光标到行尾
 
 Ctrl+Shift+n 全局搜索
 
+Ctrl+n 全局搜类
 
 Ctrl+Alt+R 全局搜索替换
+
+Ctrl+Alt+F 全局搜索
 
 Ctrl + Shift + l   注释选中代码块
 
@@ -81,7 +84,11 @@ https://www.bilibili.com/video/BV1KY4y1B7Xd?p=10&vd_source=837a80ccc382967b7ab90
 https://www.bilibili.com/video/BV1DY411A7ot?spm_id_from=333.999.0.0
 
 
+------------------------ mybatisplus源码
+https://space.bilibili.com/384087053
 
+https://www.ydlclass.com/login
 
+------------------------ jdbc源码
 
-
+https://www.bilibili.com/video/BV1hd4y1d7fx
