@@ -30,6 +30,16 @@
             <version>2.2.6.RELEASE</version>
         </dependency>
         <dependency>
+            <groupId>com.vertica.jdbc</groupId>
+            <artifactId>vertica-jdbc</artifactId>
+            <version>12.0.0-0</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>5.8.10</version>
+        </dependency>
+        <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
             <version>3.14.9</version>
