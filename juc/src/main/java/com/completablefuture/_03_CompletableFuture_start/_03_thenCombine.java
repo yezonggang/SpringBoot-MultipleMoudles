@@ -9,11 +9,13 @@ public class _03_thenCombine {
 
         CompletableFuture<String> cf1 = CompletableFuture.supplyAsync(() -> {
             SmallTool.printTimeAndThread("厨师炒菜");
-            SmallTool.sleepMillis(200);
+            SmallTool.sleepMillis(5000);
+            SmallTool.printTimeAndThread("厨师炒菜结束");
             return "番茄炒蛋";
         }).thenCombine(CompletableFuture.supplyAsync(() -> {
             SmallTool.printTimeAndThread("服务员蒸饭");
-            SmallTool.sleepMillis(300);
+            SmallTool.sleepMillis(3000);
+            SmallTool.printTimeAndThread("服务员蒸饭结束");
             return "米饭";
         }), (dish, rice) -> {
             SmallTool.printTimeAndThread("服务员打饭");

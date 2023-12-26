@@ -10,11 +10,11 @@ public class _01_thenApply {
 
         CompletableFuture<String> invoice = CompletableFuture.supplyAsync(() -> {
             SmallTool.printTimeAndThread("服务员收款 500元");
-            SmallTool.sleepMillis(100);
+            SmallTool.sleepMillis(5000);
             return "500";
         }).thenApplyAsync(money -> {
             SmallTool.printTimeAndThread(String.format("服务员开发票 面额 %s元", money));
-            SmallTool.sleepMillis(200);
+            SmallTool.sleepMillis(2000);
             return String.format("%s元发票", money);
         });
 

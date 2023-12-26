@@ -18,7 +18,7 @@ public class _01_supplyAsync {
             SmallTool.printTimeAndThread("厨师炒菜");
             SmallTool.sleepMillis(200);
             SmallTool.printTimeAndThread("厨师打饭");
-            SmallTool.sleepMillis(100);
+            SmallTool.sleepMillis(10000);
             return "番茄炒蛋 + 米饭 做好了";
         }).exceptionally(Throwable::getMessage);
 
