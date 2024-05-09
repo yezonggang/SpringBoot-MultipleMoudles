@@ -74,11 +74,6 @@ gitee地址：https://gitee.com/sunym1993/datauoauthqq_bean
 
 https://space.bilibili.com/1810096630/video
 
----springboot启动过程参考
-
-https://www.bilibili.com/video/BV1KY4y1B7Xd?p=10&vd_source=837a80ccc382967b7ab909f9407a02a4
-
-
 ------------------------ nocas参考
 
 https://www.bilibili.com/video/BV1DY411A7ot?spm_id_from=333.999.0.0
@@ -92,3 +87,16 @@ https://www.ydlclass.com/login
 ------------------------ jdbc源码
 
 https://www.bilibili.com/video/BV1hd4y1d7fx
+
+------------------------ spring源码
+
+-- mini spring
+https://github.com/DerekYRC/mini-spring
+-- tiny spring
+https://github.com/code4craft/tiny-spring
+
+---springboot启动过程参考
+https://www.bilibili.com/video/BV1KY4y1B7Xd?p=10&vd_source=837a80ccc382967b7ab909f9407a02a4
+
+------------------------ 设计模式
+https://github.com/code4craft/hello-design-pattern

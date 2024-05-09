@@ -1,7 +1,8 @@
 package com.completablefuture._03_CompletableFuture_start;
 
 
-import com.completablefuture.SmallTool;import org.slf4j.Logger;
+import com.completablefuture.SmallTool;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.CompletableFuture;
