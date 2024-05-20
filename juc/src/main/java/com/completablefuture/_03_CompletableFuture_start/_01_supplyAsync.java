@@ -14,7 +14,10 @@ public class _01_supplyAsync {
         SmallTool.printTimeAndThread("小白点了 番茄炒蛋 + 一碗米饭");
 
         logger.info("xxxx");
+        // 不返回结果
+        CompletableFuture.runAsync(() -> System.out.println("小白坐下"));
 
+        // 返回结果
         CompletableFuture<String> cf1 = CompletableFuture.supplyAsync(() -> {
             SmallTool.printTimeAndThread("厨师炒菜");
             SmallTool.sleepMillis(200);

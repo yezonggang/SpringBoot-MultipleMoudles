@@ -13,7 +13,7 @@ public class CyclicBarrierDemo {
             System.out.println("召唤神龙成功！");
         });
 
-        for (int i = 1; i <=7 ; i++) {
+        for (int i = 1; i <=8 ; i++) {
             final int temp = i;
             // lambda能操作到 i 吗
             new Thread(()->{

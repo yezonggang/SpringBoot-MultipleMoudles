@@ -47,8 +47,16 @@ Maven Helper
 mybaits
 Alibaba Java Coding Guidelines
 
+------------------------ java语言基础（重要，详细，好用！！）
 
------------------------- juc线程池工程
+https://github.com/Snailclimb/JavaGuide/blob/main/README.md
+
+https://javaguide.cn/java/collection/arraylist-source-code.html#arraylist-%E6%A0%B8%E5%BF%83%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB
+
+------------------------ jvm
+https://zhuanlan.zhihu.com/p/34426768
+
+------------------------ juc并发编程
 
 https://github.com/aofeng/threadpool4j/blob/master/doc/guide/02-guide.md
 
@@ -58,6 +66,36 @@ b站小灰灰的并发编程（代码已在工程）：https://www.bilibili.com/
 
 狂神说b站教程：https://www.bilibili.com/video/BV17E411N7KN
 
+------------------------ 设计模式
+https://github.com/code4craft/hello-design-pattern
+
+------------------------ maven和gradle
+https://www.runoob.com/maven/maven-pom.html
+
+https://www.bilibili.com/video/BV1yT41137Y7/?p=34&vd_source=837a80ccc382967b7ab909f9407a02a4
+
+------------------------ spring源码
+
+-- mini spring
+https://github.com/DerekYRC/mini-spring
+-- tiny spring
+https://github.com/code4craft/tiny-spring
+
+---springboot启动过程参考
+https://www.bilibili.com/video/BV1KY4y1B7Xd?p=10&vd_source=837a80ccc382967b7ab909f9407a02a4
+
+------------------------ mybatisplus源码
+https://space.bilibili.com/384087053
+
+https://www.ydlclass.com/login
+
+------------------------ jdbc源码
+
+https://www.bilibili.com/video/BV1hd4y1d7fx
+
+------------------------ 诸葛说架构
+
+https://space.bilibili.com/1810096630/video
 
 ------------------------ security工程参考
 
@@ -70,33 +108,9 @@ java：https://github.com/FengQingZhang/sz-java
 gitee地址：https://gitee.com/sunym1993/datauoauthqq_bean
 
 
------------------------- 诸葛说架构
-
-https://space.bilibili.com/1810096630/video
-
 ------------------------ nocas参考
 
 https://www.bilibili.com/video/BV1DY411A7ot?spm_id_from=333.999.0.0
 
 
------------------------- mybatisplus源码
-https://space.bilibili.com/384087053
 
-https://www.ydlclass.com/login
-
------------------------- jdbc源码
-
-https://www.bilibili.com/video/BV1hd4y1d7fx
-
------------------------- spring源码
-
--- mini spring
-https://github.com/DerekYRC/mini-spring
--- tiny spring
-https://github.com/code4craft/tiny-spring
-
----springboot启动过程参考
-https://www.bilibili.com/video/BV1KY4y1B7Xd?p=10&vd_source=837a80ccc382967b7ab909f9407a02a4
-
------------------------- 设计模式
-https://github.com/code4craft/hello-design-pattern
