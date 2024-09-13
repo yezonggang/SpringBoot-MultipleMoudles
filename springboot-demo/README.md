@@ -36,7 +36,11 @@ https://gitee.com/kuangstudy
 狂神说b站教程  
 https://www.bilibili.com/video/BV17E411N7KN  
 ------------------------ 设计模式  
+https://www.runoob.com/design-pattern/strategy-pattern.html  
 https://github.com/code4craft/hello-design-pattern  
+https://blog.csdn.net/sugar_no1/article/details/88317950  
+springboot中用到的设计模式  
+https://github.com/Snailclimb/JavaGuide/blob/main/docs/system-design/framework/spring/spring-design-patterns-summary.md
 ------------------------ maven和gradle  
 https://www.runoob.com/maven/maven-pom.html  
 https://www.bilibili.com/video/BV1yT41137Y7/?p=34&vd_source=837a80ccc382967b7ab909f9407a02a4  
