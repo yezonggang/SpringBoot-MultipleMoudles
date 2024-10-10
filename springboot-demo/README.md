@@ -67,8 +67,10 @@ gitee地址：https://gitee.com/sunym1993/datauoauthqq_bean
 https://www.bilibili.com/video/BV1DY411A7ot    
 ------------------------ 漫画数据结构  
 https://juejin.cn/post/6844903519632228365#comment  
------------------------- 小林coding
-https://www.xiaolincoding.com/  
+------------------------ 小林coding-网络/计算机原理等 
+https://www.xiaolincoding.com  
 ------------------------ 百度网盘-极客时间  
 王争-《数据结构与算法之美》
-王争-《设计模式》
+王争-《设计模式》  
+------------------------ 代码随想录/数据结构/刷题/算法  
+https://programmercarl.com   
